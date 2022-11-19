@@ -10,29 +10,13 @@ class Game extends Phaser.Scene {
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		/* Compost Button */
-		this.buttonCompost = new Button(EPT.world.centerX - 210, EPT.world.centerY+270, 'compost', this.addPoints, this, 'static');
-        this.buttonCompost.setOrigin(0.5,0.5);
-        this.buttonCompost.setAlpha(0);
-        this.buttonCompost.setScale(0.1);
-        this.tweens.add({targets: this.buttonCompost, alpha: 1, duration: 500, ease: 'Linear'});
-        this.tweens.add({targets: this.buttonCompost, scale: 1, duration: 500, ease: 'Back'});
+		this.gameItem = new GameItem(null, 'clickme', this.addPoints, this, 'static');
+		this.updateItem();
+		
+		this.buttonCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 270, this.clickBin, this, 'static');
+		this.buttonTrash = new GameBin('trash', EPT.world.centerX, EPT.world.centerY + 270, this.clickBin, this, 'static');
+		this.buttonRecycle = new GameBin('recycle', EPT.world.centerX + 210, EPT.world.centerY + 270, this.clickBin, this, 'static');
 
-		/* Trash Button */
-		this.buttonTrash = new Button(EPT.world.centerX, EPT.world.centerY+270, 'trash', this.addPoints, this, 'static');
-        this.buttonTrash.setOrigin(0.5,0.5);
-        this.buttonTrash.setAlpha(0);
-        this.buttonTrash.setScale(0.1);
-        this.tweens.add({targets: this.buttonTrash, alpha: 1, duration: 500, ease: 'Linear'});
-        this.tweens.add({targets: this.buttonTrash, scale: 1, duration: 500, ease: 'Back'});
-
-		/* Recycle Button */
-		this.buttonRecycle = new Button(EPT.world.centerX + 210, EPT.world.centerY+270, 'recycle', this.addPoints, this, 'static');
-        this.buttonRecycle.setOrigin(0.5,0.5);
-        this.buttonRecycle.setAlpha(0);
-        this.buttonRecycle.setScale(0.1);
-        this.tweens.add({targets: this.buttonRecycle, alpha: 1, duration: 500, ease: 'Linear'});
-        this.tweens.add({targets: this.buttonRecycle, scale: 1, duration: 500, ease: 'Back'});
         
         this.initUI();
         this.currentTimer = this.time.addEvent({
@@ -104,9 +88,9 @@ class Game extends Phaser.Scene {
 		if(this._gamePaused) {
 			EPT.fadeOutIn(function(self){
 				self.buttonPause.input.enabled = false;
-				self.buttonCompost.input.enabled = false;
-				self.buttonTrash.input.enabled = false;
-				self.buttonRecycle.input.enabled = false;
+				self.buttonCompost.image.input.enabled = false;
+				self.buttonTrash.image.input.enabled = false;
+				self.buttonRecycle.image.input.enabled = false;
 				self.stateStatus = 'paused';
 				self._runOnce = false;
 			}, this);
@@ -118,9 +102,9 @@ class Game extends Phaser.Scene {
 		else {
 			EPT.fadeOutIn(function(self){
 				self.buttonPause.input.enabled = true;
-				self.buttonCompost.input.enabled = true;
-				self.buttonTrash.input.enabled = true;
-				self.buttonRecycle.input.enabled = true;
+				self.buttonCompost.image.input.enabled = true;
+				self.buttonTrash.image.input.enabled = true;
+				self.buttonRecycle.image.input.enabled = true;
 				self._stateStatus = 'playing';
 				self._runOnce = false;
 			}, this);
@@ -145,9 +129,9 @@ class Game extends Phaser.Scene {
 		EPT.fadeOutIn(function(self){
 			self.screenGameoverGroup.toggleVisible();			
 			self.buttonPause.input.enabled = false;
-			self.buttonCompost.input.enabled = false;
-			self.buttonTrash.input.enabled = false;
-			self.buttonRecycle.input.enabled = false;
+			self.buttonCompost.image.input.enabled = false;
+			self.buttonTrash.image.input.enabled = false;
+			self.buttonRecycle.image.input.enabled = false;
 			self.screenGameoverScore.setText(EPT.text['gameplay-score']+self._score);
 			self.gameoverScoreTween();
 		}, this);
@@ -217,7 +201,6 @@ class Game extends Phaser.Scene {
     addPoints() {
 		this._score += 15;
         this.textScore.setText(EPT.text['gameplay-score']+this._score);
-        
         var randX = Phaser.Math.Between(200, EPT.world.width-200);
         var randY = Phaser.Math.Between(200, EPT.world.height-200);
 		var pointsAdded = this.add.text(randX, randY, '+15', { font: '48px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 10 });
@@ -226,6 +209,23 @@ class Game extends Phaser.Scene {
 
         this.cameras.main.shake(100, 0.01, true);
     }
+	clickBin(texture){
+		if (this.gameItem.type === texture){
+			this.addPoints();
+			this.updateItem();
+		}
+		else {
+			this._time = 0;
+		}
+	}
+
+	updateItem(){
+		const types = ["trash", "recycle", "compost"];
+		const randomType = types[Math.floor(Math.random() * types.length)];
+		this.gameItem.type = randomType;
+		this.gameItem.text.text = randomType;
+	}
+
 	stateRestart() {
 		EPT.Sfx.play('click');
         EPT.fadeOutScene('Game', this);

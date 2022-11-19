@@ -116,7 +116,8 @@ class Button extends Phaser.GameObjects.Image {
       if(!noframes) {
         this.setFrame(2);
       }
-      callback.call(scene);
+
+      callback.call(scene, texture);
     }, this);
 
     this.on('pointerover', function() {
@@ -134,6 +135,31 @@ class Button extends Phaser.GameObjects.Image {
     scene.add.existing(this);
   }
 };
+
+class GameItem {
+  constructor(type, texture, callback, scene, noframes) {
+    this.type = type;
+    //Add Button/Image
+    this.image = new Button(EPT.world.centerX, EPT.world.centerY-270, texture, callback, scene, noframes);
+    //Add Text Descrption
+    var fontItem = { font: '30px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 4, align: 'center' };
+    this.text = new Phaser.GameObjects.Text(scene, EPT.world.centerX, EPT.world.centerY-200, type, fontItem);
+    this.text.setOrigin(0.5,0);
+    scene.add.existing(this.text);
+  }
+}
+
+class GameBin {
+  constructor(type, x, y, callback, scene, noframes) {
+    this.type = type;
+    this.image = new Button(x, y, type, callback, scene, noframes);
+    this.image.setOrigin(0.5,0.5);
+    this.image.setAlpha(0);
+    this.image.setScale(0.1);
+    scene.tweens.add({targets: this.image, alpha: 1, duration: 500, ease: 'Linear'});
+    scene.tweens.add({targets: this.image, scale: 1, duration: 500, ease: 'Back'});
+  }
+}
 
 EPT.Storage = {
 	availability: function() {

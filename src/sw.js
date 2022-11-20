@@ -53,14 +53,15 @@ var appShellFiles = [
   './img/trash.png',
   './img/recycle.png',
   './img/compost.png',
-  './img/enclave-phaser-template.png',
+  './img/bear.png',
   './img/fork.png',
   './img/loading-background.png',
   './img/logo-enclave.png',
   './img/overlay.png',
   './img/particle.png',
   './img/pattern.png',
-  './img/title.png'
+  './img/title.png',
+  './img/bear.png'
 ];
 
 self.addEventListener('install', function(e) {

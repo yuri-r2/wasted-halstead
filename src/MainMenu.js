@@ -11,7 +11,7 @@ class MainMenu extends Phaser.Scene {
 
         this.waitingForSettings = false;
 
-        var title = this.add.sprite(EPT.world.centerX, EPT.world.centerY-50, 'title');
+        var title = this.add.sprite(EPT.world.centerX, EPT.world.centerY-50, 'bear');
         title.setOrigin(0.5);
 
         this.input.keyboard.on('keydown', this.handleKey, this);
@@ -19,11 +19,11 @@ class MainMenu extends Phaser.Scene {
         this.tweens.add({targets: title, angle: title.angle-2, duration: 1000, ease: 'Sine.easeInOut' });
         this.tweens.add({targets: title, angle: title.angle+4, duration: 2000, ease: 'Sine.easeInOut', yoyo: 1, loop: -1, delay: 1000 });
 
-        this.buttonSettings = new Button(20, 20, 'button-settings', this.clickSettings, this);
-        this.buttonSettings.setOrigin(0, 0);
+        // this.buttonSettings = new Button(20, 20, 'button-settings', this.clickSettings, this);
+        // this.buttonSettings.setOrigin(0, 0);
 
-        var buttonEnclave = new Button(20, EPT.world.height-40, 'logo-enclave', this.clickEnclave, this, 'static');
-        buttonEnclave.setOrigin(0, 1);
+        // var buttonEnclave = new Button(20, EPT.world.height-40, 'logo-enclave', this.clickEnclave, this, 'static');
+        // buttonEnclave.setOrigin(0, 1);
 
         this.buttonStart = new Button(EPT.world.width-20, EPT.world.height-20, 'button-start', this.clickStart, this);
         this.buttonStart.setOrigin(1, 1);
@@ -35,11 +35,11 @@ class MainMenu extends Phaser.Scene {
 		this.buttonStart.x = EPT.world.width+this.buttonStart.width+20;
         this.tweens.add({targets: this.buttonStart, x: EPT.world.width-20, duration: 500, ease: 'Back'});
 
-		buttonEnclave.x = -buttonEnclave.width-20;
-        this.tweens.add({targets: buttonEnclave, x: 20, duration: 500, ease: 'Back'});
+		// buttonEnclave.x = -buttonEnclave.width-20;
+        // this.tweens.add({targets: buttonEnclave, x: 20, duration: 500, ease: 'Back'});
 
-        this.buttonSettings.y = -this.buttonSettings.height-20;
-        this.tweens.add({targets: this.buttonSettings, y: 20, duration: 500, ease: 'Back'});
+        // this.buttonSettings.y = -this.buttonSettings.height-20;
+        // this.tweens.add({targets: this.buttonSettings, y: 20, duration: 500, ease: 'Back'});
 
         textHighscore.y = -textHighscore.height-30;
         this.tweens.add({targets: textHighscore, y: 40, duration: 500, delay: 100, ease: 'Back'});
@@ -85,7 +85,7 @@ class MainMenu extends Phaser.Scene {
             var animationFrames = this.anims.generateFrameNumbers('loader');
             animationFrames.pop();
             this.waitingForSettings = true;
-            this.buttonSettings.setAlpha(0.1);
+            // this.buttonSettings.setAlpha(0.1);
             var loadAnimation = this.anims.create({
                 key: 'loading',
                 frames: animationFrames,

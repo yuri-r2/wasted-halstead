@@ -199,11 +199,11 @@ class Game extends Phaser.Scene {
 		this.screenGameoverGroup.toggleVisible();
     }
     addPoints() {
-		this._score += 15;
+		this._score += 1;
         this.textScore.setText(EPT.text['gameplay-score']+this._score);
         var randX = Phaser.Math.Between(200, EPT.world.width-200);
         var randY = Phaser.Math.Between(200, EPT.world.height-200);
-		var pointsAdded = this.add.text(randX, randY, '+15', { font: '48px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 10 });
+		var pointsAdded = this.add.text(randX, randY, '+1', { font: '48px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 10 });
 		pointsAdded.setOrigin(0.5, 0.5);
         this.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
 

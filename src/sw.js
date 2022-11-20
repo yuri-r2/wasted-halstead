@@ -54,7 +54,6 @@ var appShellFiles = [
   './img/recycle.png',
   './img/compost.png',
   './img/bear.png',
-  './img/fork.png',
   './img/loading-background.png',
   './img/logo-enclave.png',
   './img/overlay.png',

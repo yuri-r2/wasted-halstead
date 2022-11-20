@@ -5,7 +5,7 @@ class Story extends Phaser.Scene {
     create() {
 		this.add.sprite(0, 0, 'background').setOrigin(0,0);
 
-		var fontStory = { font: '48px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 7, align: 'center' };
+		var fontStory = { font: '40px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 7, align: 'center' };
 		var textStory = this.add.text(EPT.world.centerX, 200, EPT.text['screen-story-howto'], fontStory);
 		textStory.setOrigin(0.5,0);
 

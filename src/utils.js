@@ -287,7 +287,7 @@ EPT.Lang = {
       'gameplay-paused': 'PAUSED',
       'gameplay-gameover': 'GAME OVER',
       'menu-highscore': 'Highscore: ',
-      'screen-story-howto': 'Story / how to play\nscreen'
+      'screen-story-howto': 'Click on the appropriate\nbin to dispose of the given item!\n\n\n\nif the item requires special\ndisposal - click on the item\nitself to reject it!'
     },
     'pl': {
       'FONT': 'Arial',

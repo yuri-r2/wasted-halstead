@@ -10,7 +10,7 @@ class Game extends Phaser.Scene {
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		this.gameItem = new GameItem(null, 'clickme', this.addPoints, this, 'static');
+		this.gameItem = new GameItem(null, null, this.addPoints, this, 'static');
 		this.updateItem();
 		
 		this.buttonCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 270, function(){this.clickBin('compost');}, this, 'static');

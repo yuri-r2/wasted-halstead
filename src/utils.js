@@ -117,7 +117,7 @@ class Button extends Phaser.GameObjects.Image {
         this.setFrame(2);
       }
 
-      callback.call(scene, texture);
+      callback.call(scene);
     }, this);
 
     this.on('pointerover', function() {

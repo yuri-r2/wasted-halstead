@@ -13,9 +13,9 @@ class Game extends Phaser.Scene {
 		this.gameItem = new GameItem(null, 'clickme', this.addPoints, this, 'static');
 		this.updateItem();
 		
-		this.buttonCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 270, this.clickBin, this, 'static');
-		this.buttonTrash = new GameBin('trash', EPT.world.centerX, EPT.world.centerY + 270, this.clickBin, this, 'static');
-		this.buttonRecycle = new GameBin('recycle', EPT.world.centerX + 210, EPT.world.centerY + 270, this.clickBin, this, 'static');
+		this.buttonCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 270, function(){this.clickBin('compost');}, this, 'static');
+		this.buttonTrash = new GameBin('trash', EPT.world.centerX, EPT.world.centerY + 270, function(){this.clickBin('trash');}, this, 'static');
+		this.buttonRecycle = new GameBin('recycle', EPT.world.centerX + 210, EPT.world.centerY + 270, function(){this.clickBin('recycle');}, this, 'static');
 
         
         this.initUI();
@@ -209,8 +209,8 @@ class Game extends Phaser.Scene {
 
         this.cameras.main.shake(100, 0.01, true);
     }
-	clickBin(texture){
-		if (this.gameItem.type === texture){
+	clickBin(type){
+		if (this.gameItem.type === type){
 			this.addPoints();
 			this.updateItem();
 		}

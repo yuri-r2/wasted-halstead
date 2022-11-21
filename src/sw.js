@@ -60,7 +60,28 @@ var appShellFiles = [
   './img/particle.png',
   './img/pattern.png',
   './img/title.png',
-  './img/bear.png'
+  './img/bear.png',
+
+  './img/compost-clamshell.png',
+  './img/compost-coffeegrounds.png',
+  './img/compost-dylans.png',
+  './img/compost-eggshells.png',
+  './img/compost-papertowel.png',
+  './img/compost-parchment.png',
+
+  './img/trash-plasticbag.png',
+  './img/trash-bluebell.png',
+  './img/trash-bubblewrap.png',
+  './img/trash-chewinggum.png',
+  './img/trash-ketchup.png',
+  './img/trash-milkcarton.png',
+
+  './img/recycle-spaghettios.png',
+  './img/recycle-aluminium.png',
+  './img/recycle-cakecontainer.png',
+  './img/recycle-cardboard.png',
+  './img/recycle-cheerios.png',
+  './img/recycle-dasani.png'
 ];
 
 self.addEventListener('install', function(e) {

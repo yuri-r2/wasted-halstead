@@ -1,3 +1,28 @@
+const types = ["trash", "recycle", "compost"];
+const trash_items = {
+	'trash-bluebell': "Empty can of Blue Bell icecream",
+	'trash-bubblewrap': "Bubble wrap",
+	'trash-chewinggum': "Well-chewed chewing gum",
+	'trash-ketchup': "Ketchup packet",
+	'trash-milkcarton': "Empty carton of milk",
+	'trash-plasticbag': "Plastic grocery bag"
+}
+const recycle_items = { 
+	'recycle-spaghettios': "Cleaned out can of SpaghettiOs",
+	'recycle-aluminium': "Aluminium foil",
+	'recycle-cakecontainer': "Cleaned out cake container",
+	'recycle-cardboard': "Broken down cardboard box",
+	'recycle-cheerios': "Empty box of Cheerios",
+	'recycle-dasani': "Empty Dasani bottle"
+}
+const compost_items = {
+	'compost-clamshell': "Clamshell made of sugar cane fibers",
+	'compost-coffeegrounds': "Used coffee grounds",
+	'compost-dylans': "Dylan's pizza",
+	'compost-eggshells': "Egg shells",
+	'compost-papertowel': "Paper towels",
+	'compost-parchment': "Parchment paper"
+}
 class Game extends Phaser.Scene {
     constructor() {
         super('Game');
@@ -10,7 +35,7 @@ class Game extends Phaser.Scene {
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		this.gameItem = new GameItem(null, null, this.addPoints, this, 'static');
+		this.gameItem = new GameItem(null, 'recycle-cheerios', this.addPoints, this, 'static');
 		this.updateItem();
 		
 		this.binCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 270, function(){this.clickBin('compost');}, this);
@@ -221,10 +246,31 @@ class Game extends Phaser.Scene {
 
 
 	updateItem(){
-		const types = ["trash", "recycle", "compost"];
+		
 		const randomType = types[Math.floor(Math.random() * types.length)];
 		this.gameItem.type = randomType;
-		this.gameItem.text.text = randomType;
+		var randomItem = null;
+		var keys = null; 
+		var itemDescription = null;
+		switch (randomType){
+			case 'compost':
+				keys = Object.keys(compost_items)
+				randomItem = keys[Math.floor(Math.random() * keys.length)];
+				itemDescription = compost_items[randomItem];
+				break;
+			case 'trash':
+				keys = Object.keys(trash_items)
+				randomItem = keys[Math.floor(Math.random() * keys.length)];
+				itemDescription = trash_items[randomItem];
+				break;
+			case 'recycle':
+				keys = Object.keys(recycle_items)
+				randomItem = keys[Math.floor(Math.random() * keys.length)];
+				itemDescription = recycle_items[randomItem];
+				break;
+		}
+		this.gameItem.image.setTexture(randomItem);
+		this.gameItem.text.setText(itemDescription);
 	}
 
 	stateRestart() {

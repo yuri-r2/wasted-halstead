@@ -125,6 +125,29 @@ class MainMenu extends Phaser.Scene {
         this.load.image('img/compost');
         this.load.image('img/trash');
         this.load.image('img/recycle');
+
+
+        this.load.image('img/compost-clamshell');
+        this.load.image('img/compost-coffeegrounds');
+        this.load.image('img/compost-dylans');
+        this.load.image('img/compost-eggshells');
+        this.load.image('img/compost-papertowel');
+        this.load.image('img/compost-parchment');
+
+        this.load.image('img/trash-bluebell');
+        this.load.image('img/trash-bubblewrap');
+        this.load.image('img/trash-chewinggum');
+        this.load.image('img/trash-ketchup');
+        this.load.image('img/trash-milkcarton');
+        this.load.image('img/trash-plasticbag');
+
+        this.load.image('img/recycle-spaghettios');
+        this.load.image('img/recycle-aluminium');
+        this.load.image('img/recycle-cakecontainer');
+        this.load.image('img/recycle-cardboard');
+        this.load.image('img/recycle-cheerios');
+        this.load.image('img/recycle-dasani');
+
         this.load.once('filecomplete', this.addFiles, this);
         this.load.start();
     }
@@ -135,7 +158,28 @@ class MainMenu extends Phaser.Scene {
                 ['overlay', 'img/overlay.png'],
                 ['button-beer', 'img/button-beer.png'],
                 ['banner-beer', 'img/banner-beer.png'],
-                ['particle', 'img/particle.png']
+                ['particle', 'img/particle.png'],
+
+                ['compost-clamshell', 'img/compost-clamshell.png'],
+                ['compost-coffeegrounds', 'img/compost-coffeegrounds.png'],
+                ['compost-dylans', 'img/compost-dylans.png'],
+                ['compost-eggshells', 'img/compost-eggshells.png'],
+                ['compost-papertowel', 'img/compost-papertowel.png'],
+                ['compost-parchment', 'img/compost-parchment.png'],
+
+                ['trash-bluebell', 'img/trash-bluebell.png'],
+                ['trash-bubblewrap', 'img/trash-bubblewrap.png'],
+                ['trash-chewinggum', 'img/trash-chewinggum.png'],
+                ['trash-ketchup', 'img/trash-ketchup.png'],
+                ['trash-milkcarton', 'img/trash-milkcarton.png'],
+                ['trash-plasticbag', 'img/trash-plasticbag.png'],
+
+                ['recycle-spaghettios', 'img/recycle-spaghettios.png'],
+                ['recycle-aluminium', 'img/recycle-aluminium.png'],
+                ['recycle-cakecontainer', 'img/recycle-cakecontainer.png'],
+                ['recycle-cardboard', 'img/recycle-cardboard.png'],
+                ['recycle-cheerios', 'img/recycle-cheerios.png'],
+                ['recycle-dasani', 'img/recycle-dasani.png']
             ],
             'spritesheet': [
                 ['compost', 'img/compost.png', {frameWidth:220,frameHeight:300}],

@@ -187,6 +187,8 @@ class GameBin extends Phaser.GameObjects.Image {
   }
 }
 
+
+
 EPT.Storage = {
 	availability: function() {
 		if(!(!(typeof(window.localStorage) === 'undefined'))) {

@@ -15,7 +15,7 @@ class Game extends Phaser.Scene {
 		
 		this.buttonCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 270, function(){this.clickBin('compost');}, this, 'static');
 		this.buttonTrash = new GameBin('trash', EPT.world.centerX, EPT.world.centerY + 270, function(){this.clickBin('trash');}, this, 'static');
-		this.buttonRecycle = new GameBin('recycle', EPT.world.centerX + 210, EPT.world.centerY + 270, function(){this.clickBin('recycle');}, this, 'static');
+		this.buttonRecycle = new GameBin('recycle', EPT.world.centerX + 200, EPT.world.centerY + 270, function(){this.clickBin('recycle');}, this);
 
         
         this.initUI();
@@ -88,9 +88,9 @@ class Game extends Phaser.Scene {
 		if(this._gamePaused) {
 			EPT.fadeOutIn(function(self){
 				self.buttonPause.input.enabled = false;
-				self.buttonCompost.image.input.enabled = false;
-				self.buttonTrash.image.input.enabled = false;
-				self.buttonRecycle.image.input.enabled = false;
+				self.buttonCompost.input.enabled = false;
+				self.buttonTrash.input.enabled = false;
+				self.buttonRecycle.input.enabled = false;
 				self.stateStatus = 'paused';
 				self._runOnce = false;
 			}, this);
@@ -102,9 +102,9 @@ class Game extends Phaser.Scene {
 		else {
 			EPT.fadeOutIn(function(self){
 				self.buttonPause.input.enabled = true;
-				self.buttonCompost.image.input.enabled = true;
-				self.buttonTrash.image.input.enabled = true;
-				self.buttonRecycle.image.input.enabled = true;
+				self.buttonCompost.input.enabled = true;
+				self.buttonTrash.input.enabled = true;
+				self.buttonRecycle.input.enabled = true;
 				self._stateStatus = 'playing';
 				self._runOnce = false;
 			}, this);
@@ -129,9 +129,9 @@ class Game extends Phaser.Scene {
 		EPT.fadeOutIn(function(self){
 			self.screenGameoverGroup.toggleVisible();			
 			self.buttonPause.input.enabled = false;
-			self.buttonCompost.image.input.enabled = false;
-			self.buttonTrash.image.input.enabled = false;
-			self.buttonRecycle.image.input.enabled = false;
+			self.buttonCompost.input.enabled = false;
+			self.buttonTrash.input.enabled = false;
+			self.buttonRecycle.input.enabled = false;
 			self.screenGameoverScore.setText(EPT.text['gameplay-score']+self._score);
 			self.gameoverScoreTween();
 		}, this);
@@ -219,8 +219,10 @@ class Game extends Phaser.Scene {
 		}
 	}
 
+
 	updateItem(){
-		const types = ["trash", "recycle", "compost"];
+		// const types = ["trash", "recycle", "compost"];
+		const types = ["recycle"];
 		const randomType = types[Math.floor(Math.random() * types.length)];
 		this.gameItem.type = randomType;
 		this.gameItem.text.text = randomType;

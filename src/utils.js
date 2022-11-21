@@ -149,15 +149,41 @@ class GameItem {
   }
 }
 
-class GameBin {
+class GameBin extends Phaser.GameObjects.Image {
   constructor(type, x, y, callback, scene, noframes) {
+    super(scene, x, y, type, 0);
     this.type = type;
-    this.image = new Button(x, y, type, callback, scene, noframes);
-    this.image.setOrigin(0.5,0.5);
-    this.image.setAlpha(0);
-    this.image.setScale(0.1);
-    scene.tweens.add({targets: this.image, alpha: 1, duration: 500, ease: 'Linear'});
-    scene.tweens.add({targets: this.image, scale: 1, duration: 500, ease: 'Back'});
+    this.setInteractive({ useHandCursor: true });
+    this.on('pointerup', function() {
+      if(!noframes) {
+        this.setFrame(1);
+      }
+    }, this);
+
+    this.on('pointerdown', function() {
+      if(!noframes) {
+        this.setFrame(1);
+      }
+      callback.call(scene);
+    }, this);
+
+    this.on('pointerover', function() {
+      if(!noframes) {
+        this.setFrame(1);
+      }
+    }, this);
+
+    this.on('pointerout', function() {
+      if(!noframes) {
+        this.setFrame(0);
+      }
+    }, this);
+    this.setOrigin(0.5,0.5);
+    this.setAlpha(0);
+    this.setScale(0.1);
+    scene.add.existing(this);
+    scene.tweens.add({targets: this, alpha: 1, duration: 500, ease: 'Linear'});
+    scene.tweens.add({targets: this, scale: 1, duration: 500, ease: 'Back'});
   }
 }
 

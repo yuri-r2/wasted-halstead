@@ -125,6 +125,7 @@ class MainMenu extends Phaser.Scene {
         this.load.image('img/compost');
         this.load.image('img/trash');
         this.load.image('img/recycle');
+        this.load.image('img/recycle');
         this.load.once('filecomplete', this.addFiles, this);
         this.load.start();
     }
@@ -133,7 +134,6 @@ class MainMenu extends Phaser.Scene {
             'image': [
                 ['clickme', 'img/clickme.png'],
                 ['trash', 'img/trash.png'],
-                ['recycle', 'img/recycle.png'],
                 ['compost', 'img/compost.png'],
                 ['overlay', 'img/overlay.png'],
                 ['button-beer', 'img/button-beer.png'],
@@ -141,6 +141,7 @@ class MainMenu extends Phaser.Scene {
                 ['particle', 'img/particle.png']
             ],
             'spritesheet': [
+                ['recycle', 'img/recycle.png', {frameWidth:220,frameHeight:300}],
                 ['button-continue', 'img/button-continue.png', {frameWidth:180,frameHeight:180}],
                 ['button-mainmenu', 'img/button-mainmenu.png', {frameWidth:180,frameHeight:180}],
                 ['button-restart', 'img/button-tryagain.png', {frameWidth:180,frameHeight:180}],

@@ -15,7 +15,6 @@ var appShellFiles = [
   './sfx/audio-button.mp3',
   './sfx/audio-button.ogg',
   './sfx/applause.mp3',
-  './sfx/button-click-long.mp3',
   './sfx/TrashClose.mp3',
   './sfx/music-bitsnbites-liver.m4a',
   './sfx/music-bitsnbites-liver.mp3',

@@ -30,6 +30,9 @@ var gameConfig = {
 		width: 640,
 		height: 960
 	},
+	audio: {
+		disableWebAudio: true
+	},
 	scene: [Boot, Preloader, MainMenu, Settings, Story, Game]
 }
 game = new Phaser.Game(gameConfig);

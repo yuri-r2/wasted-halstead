@@ -6,8 +6,9 @@ EPT.Sfx = {
     EPT.Sfx.music = game.sound.add('music-theme');
     EPT.Sfx.music.volume = 0.5;
     EPT.Sfx.sounds = [];
-    EPT.Sfx.sounds['click'] = game.sound.add('sound-click');
+    EPT.Sfx.sounds['click'] = game.sound.add('sound-clicklong');
     EPT.Sfx.sounds['applause'] = game.sound.add('sound-applause');
+    EPT.Sfx.sounds['trash'] = game.sound.add('sound-trash');
     game.input.on('pointerdown', function () {
       game.sound.unlock();
       if (!EPT.Sfx.music.isPlaying){
@@ -25,15 +26,15 @@ EPT.Sfx = {
   play: function(audio, game) {
     if(EPT.Sfx.sounds && EPT.Sfx.sounds[audio]) {
       console.log("play");
-      // game.sound.unlock();
+      game.sound.unlock();
       if (!game.sound.locked) {
         EPT.Sfx.sounds[audio].play();
       }
-      // else{  // IF Not wait on unlock event 
-      //   game.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
-      //     EPT.Sfx.sounds[audio].play();
-      //   })
-      // }
+      else{  // IF Not wait on unlock event 
+        game.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
+          EPT.Sfx.sounds[audio].play();
+        })
+      }
       
     }
   }

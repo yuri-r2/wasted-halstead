@@ -50,15 +50,29 @@ EPT.Sfx = {
 
     EPT.Storage.set('EPT-'+type, EPT.Sfx.status[type]);
 	},
-	play: function(audio) {
+	play: function(audio, game) {
     if(audio == 'music') {
       if(EPT.Sfx.status['music'] && EPT.Sfx.music && !EPT.Sfx.music.isPlaying) {
-        EPT.Sfx.music.play({loop:true});
+        if (!game.sound.locked) {
+          EPT.Sfx.music.play({loop:true});
+        }
+        else {  // IF Not wait on unlock event 
+          game.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
+            EPT.Sfx.music.play({loop:true});
+          })
+        }
       }
     }
     else { // sound
       if(EPT.Sfx.status['sound'] && EPT.Sfx.sounds && EPT.Sfx.sounds[audio]) {
-        EPT.Sfx.sounds[audio].play();
+        if (!game.sound.locked) {
+          EPT.Sfx.sounds[audio].play();
+        }
+        else {  // IF Not wait on unlock event 
+          game.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
+            EPT.Sfx.sounds[audio].play();
+          })
+        }
       }
     }
   },

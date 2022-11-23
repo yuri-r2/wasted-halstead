@@ -28,7 +28,7 @@ class MainMenu extends Phaser.Scene {
         this.buttonStart = new Button(EPT.world.width-20, EPT.world.height-20, 'button-start', this.clickStart, this);
         this.buttonStart.setOrigin(1, 1);
 
-		var fontHighscore = { font: '38px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 5 };
+		var fontHighscore = { font: '38px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 5 };
 		var textHighscore = this.add.text(EPT.world.width-30, 60, EPT.text['menu-highscore']+highscore, fontHighscore);
 		textHighscore.setOrigin(1, 0);
 
@@ -185,7 +185,7 @@ class MainMenu extends Phaser.Scene {
                 ['compost', 'img/compost.png', {frameWidth:220,frameHeight:300}],
                 ['trash', 'img/trash.png', {frameWidth:220,frameHeight:300}],
                 ['recycle', 'img/recycle.png', {frameWidth:220,frameHeight:300}],
-                ['button-continue', 'img/button-continue.png', {frameWidth:180,frameHeight:180}],
+                ['button-continue', 'img/button-start.png', {frameWidth:180,frameHeight:180}],
                 ['button-mainmenu', 'img/button-mainmenu.png', {frameWidth:180,frameHeight:180}],
                 ['button-restart', 'img/button-tryagain.png', {frameWidth:180,frameHeight:180}],
                 ['button-achievements', 'img/button-achievements.png', {frameWidth:110,frameHeight:110}],

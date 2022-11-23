@@ -4,15 +4,15 @@ class Preloader extends Phaser.Scene {
     }
     preload() {
 		this.add.sprite(0, 0, 'background').setOrigin(0, 0);
-        var logoEnclave = this.add.sprite(EPT.world.centerX, EPT.world.centerY-100, 'logo-enclave');
-        logoEnclave.setOrigin(0.5, 0.5);
+        // var logoEnclave = this.add.sprite(EPT.world.centerX, EPT.world.centerY-100, 'logo-enclave');
+        // logoEnclave.setOrigin(0.5, 0.5);
 		var loadingBg = this.add.sprite(EPT.world.centerX, EPT.world.centerY+100, 'loading-background');
 		loadingBg.setOrigin(0.5, 0.5);
 
 		var progress = this.add.graphics();
 		this.load.on('progress', function (value) {
 			progress.clear();
-			progress.fillStyle(0xffde00, 1);
+			progress.fillStyle(0xD6DE49, 1);
 			progress.fillRect(loadingBg.x-(loadingBg.width*0.5)+20, loadingBg.y-(loadingBg.height*0.5)+10, 540 * value, 25);
 		});
 

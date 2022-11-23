@@ -38,9 +38,9 @@ class Game extends Phaser.Scene {
 		this.gameItem = new GameItem(null, 'recycle-cheerios', this.addPoints, this, 'static');
 		this.updateItem();
 		
-		this.binCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 270, function(){this.clickBin('compost');}, this);
-		this.binTrash = new GameBin('trash', EPT.world.centerX-5, EPT.world.centerY + 270, function(){this.clickBin('trash');}, this);
-		this.binRecycle = new GameBin('recycle', EPT.world.centerX + 200, EPT.world.centerY + 270, function(){this.clickBin('recycle');}, this);
+		this.binCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 250, function(){this.clickBin('compost');}, this);
+		this.binTrash = new GameBin('trash', EPT.world.centerX-5, EPT.world.centerY + 250, function(){this.clickBin('trash');}, this);
+		this.binRecycle = new GameBin('recycle', EPT.world.centerX + 200, EPT.world.centerY + 250, function(){this.clickBin('recycle');}, this);
 
         
         this.initUI();
@@ -139,10 +139,13 @@ class Game extends Phaser.Scene {
 			this.tweens.add({targets: this.screenPausedContinue, x: EPT.world.width+this.screenPausedContinue.width+20, duration: 500, ease: 'Back'});
         }
     }
+	endGame(){
+		this._runOnce = false;
+        this.stateStatus = 'gameover';
+	}
 	statePlaying() {
         if(this._time === 0) {
-            this._runOnce = false;
-            this.stateStatus = 'gameover';
+            this.endGame();
         }
 	}
 	statePaused() {
@@ -169,8 +172,8 @@ class Game extends Phaser.Scene {
 		this.buttonPause = new Button(20, 20, 'button-pause', this.managePause, this);
 		this.buttonPause.setOrigin(0,0);
 
-		var fontScore = { font: '38px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 5 };
-		var fontScoreWhite =  { font: '38px '+EPT.text['FONT'], fill: '#000', stroke: '#ffde00', strokeThickness: 5 };
+		var fontScore = { font: '38px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 5 };
+		var fontScoreWhite =  { font: '38px '+EPT.text['FONT'], fill: '#000', stroke: '#D6DE49', strokeThickness: 5 };
 		this.textScore = this.add.text(EPT.world.width-30, 45, EPT.text['gameplay-score']+this._score, fontScore);
 		this.textScore.setOrigin(1,0);
 
@@ -186,7 +189,7 @@ class Game extends Phaser.Scene {
 		this.buttonPause.y = -this.buttonPause.height-20;
         this.tweens.add({targets: this.buttonPause, y: 20, duration: 500, ease: 'Back'});
 
-		var fontTitle = { font: '48px '+EPT.text['FONT'], fill: '#000', stroke: '#ffde00', strokeThickness: 10 };
+		var fontTitle = { font: '48px '+EPT.text['FONT'], fill: '#000', stroke: '#D6DE49', strokeThickness: 10 };
 
 		this.screenPausedGroup = this.add.group();
         this.screenPausedBg = this.add.sprite(0, 0, 'overlay');
@@ -228,7 +231,7 @@ class Game extends Phaser.Scene {
         this.textScore.setText(EPT.text['gameplay-score']+this._score);
         var randX = Phaser.Math.Between(200, EPT.world.width-200);
         var randY = Phaser.Math.Between(200, EPT.world.height-200);
-		var pointsAdded = this.add.text(randX, randY, '+1', { font: '48px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 10 });
+		var pointsAdded = this.add.text(randX, randY, '+1', { font: '48px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 10 });
 		pointsAdded.setOrigin(0.5, 0.5);
         this.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
 
@@ -240,14 +243,12 @@ class Game extends Phaser.Scene {
 			this.updateItem();
 		}
 		else {
-			this._time = 0;
+			this.endGame();
 		}
 	}
 
-
 	updateItem(){
-		
-		const randomType = types[Math.floor(Math.random() * types.length)];
+		var randomType = types[Math.floor(Math.random() * types.length)];
 		this.gameItem.type = randomType;
 		var randomItem = null;
 		var keys = null; 
@@ -256,16 +257,28 @@ class Game extends Phaser.Scene {
 			case 'compost':
 				keys = Object.keys(compost_items)
 				randomItem = keys[Math.floor(Math.random() * keys.length)];
+				//make sure we are getting a different next item 
+				while (this.gameItem.image.texture.key === randomItem){
+					randomItem = keys[Math.floor(Math.random() * keys.length)];
+				}
 				itemDescription = compost_items[randomItem];
 				break;
 			case 'trash':
 				keys = Object.keys(trash_items)
 				randomItem = keys[Math.floor(Math.random() * keys.length)];
+				//make sure we are getting a different next item 
+				while (this.gameItem.image.texture.key === randomItem){
+					randomItem = keys[Math.floor(Math.random() * keys.length)];
+				}
 				itemDescription = trash_items[randomItem];
 				break;
 			case 'recycle':
 				keys = Object.keys(recycle_items)
 				randomItem = keys[Math.floor(Math.random() * keys.length)];
+				//make sure we are getting a different next item 
+				while (this.gameItem.image.texture.key === randomItem){
+					randomItem = keys[Math.floor(Math.random() * keys.length)];
+				}
 				itemDescription = recycle_items[randomItem];
 				break;
 		}

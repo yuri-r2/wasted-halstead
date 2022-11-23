@@ -142,8 +142,8 @@ class GameItem {
     //Add Button/Image
     this.image = new Button(EPT.world.centerX, EPT.world.centerY-270, texture, callback, scene, noframes);
     //Add Text Descrption
-    var fontItem = { font: '30px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 4, align: 'center' };
-    this.text = new Phaser.GameObjects.Text(scene, EPT.world.centerX, EPT.world.centerY-200, type, fontItem);
+    var fontItem = { font: '30px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 4, align: 'center' };
+    this.text = new Phaser.GameObjects.Text(scene, EPT.world.centerX, EPT.world.centerY-100, type, fontItem);
     this.text.setOrigin(0.5,0);
     scene.add.existing(this.text);
   }
@@ -278,7 +278,7 @@ EPT.Lang = {
   },
   text: {
     'en': {
-      'FONT': 'Berlin',
+      'FONT': 'Pixel',
       'settings': 'SETTINGS',
       'sound-on': 'Sound: ON',
       'sound-off': 'Sound: OFF',

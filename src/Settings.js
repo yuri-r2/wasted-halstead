@@ -12,9 +12,9 @@ class Settings extends Phaser.Scene {
 		this.buttonBack.y = -this.buttonBack.height-20;
 		this.tweens.add({targets: this.buttonBack, y: 20, duration: 500, ease: 'Back'});
 
-		var fontTitle = { font: '46px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 7, align: 'center' };
-		var fontSubtitle = { font: '38px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 5, align: 'center' };
-		var fontSmall = { font: '28px '+EPT.text['FONT'], fill: '#ffde00', stroke: '#000', strokeThickness: 4, align: 'center' };
+		var fontTitle = { font: '46px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 7, align: 'center' };
+		var fontSubtitle = { font: '38px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 5, align: 'center' };
+		var fontSmall = { font: '28px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 4, align: 'center' };
 		var titleSettings = this.add.text(EPT.world.centerX, 60, EPT.text['settings'], fontTitle);
 		titleSettings.setOrigin(0.5, 0.5);
 		var offsetLeft = 130;

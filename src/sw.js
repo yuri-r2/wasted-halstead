@@ -19,6 +19,7 @@ var appShellFiles = [
   './sfx/music-bitsnbites-liver.m4a',
   './sfx/music-bitsnbites-liver.mp3',
   './sfx/music-bitsnbites-liver.ogg',
+  './sfx/TexasFight.mp3',
   './img/icons/icon-32.png',
   './img/icons/icon-64.png',
   './img/icons/icon-96.png',

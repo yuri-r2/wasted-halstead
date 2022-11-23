@@ -4,7 +4,7 @@ EPT.Sfx = {
   init: function (game) {
     game.sound.pauseOnBlur = false;
     EPT.Sfx.music = game.sound.add('music-theme');
-    EPT.Sfx.music.volume = 0.5;
+    EPT.Sfx.music.volume = 0.3;
     EPT.Sfx.sounds = [];
     EPT.Sfx.sounds['click'] = game.sound.add('sound-click');
     EPT.Sfx.sounds['gameover'] = game.sound.add('sound-gameover');

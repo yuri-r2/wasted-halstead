@@ -201,7 +201,7 @@ class MainMenu extends Phaser.Scene {
                 ['sound-click', ['sfx/button-click-long.mp3']],
                 ['sound-gameover', ['sfx/GameOver.mp3']],
                 ['sound-trash', ['sfx/TrashClose.mp3']],
-                ['music-theme', ['sfx/music-bitsnbites-liver.mp3']]
+                ['music-theme', ['sfx/TexasFight.mp3']]
             ]
         };            
         for(var method in resources) {

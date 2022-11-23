@@ -240,6 +240,7 @@ class Game extends Phaser.Scene {
     }
 	clickBin(type){
 		if (this.gameItem.type === type){
+			EPT.Sfx.play('trash', this);
 			this.addPoints();
 			this.updateItem();
 		}

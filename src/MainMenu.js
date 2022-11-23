@@ -200,6 +200,7 @@ class MainMenu extends Phaser.Scene {
             'audio': [
                 ['sound-click', ['sfx/audio-button.m4a','sfx/audio-button.mp3','sfx/audio-button.ogg']],
                 ['sound-applause', ['sfx/applause.mp3']],
+                ['sound-trash', ['sfx/TrashClose.mp3']],
                 ['music-theme', ['sfx/music-bitsnbites-liver.m4a','sfx/music-bitsnbites-liver.mp3','sfx/music-bitsnbites-liver.ogg']]
             ]
         };            

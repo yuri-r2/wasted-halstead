@@ -56,8 +56,8 @@ class Settings extends Phaser.Scene {
 			}
 		}
 
-		EPT.Sfx.update('sound', this.buttonSound, this.textSound);
-		EPT.Sfx.update('music', this.buttonMusic, this.textMusic);
+		// EPT.Sfx.update('sound', this.buttonSound, this.textSound);
+		// EPT.Sfx.update('music', this.buttonMusic, this.textMusic);
 
 		this.buttonSound.setScale(0.5);
 		this.tweens.add({targets: this.buttonSound, scaleX: 1, scaleY: 1, duration: 500, delay: 0, ease: 'Cubic.easeOut' });
@@ -206,11 +206,11 @@ class Settings extends Phaser.Scene {
     }
 	clickSound() {
 		EPT.Sfx.play('click');
-		EPT.Sfx.manage('sound', 'switch', this, this.buttonSound, this.textSound);
+		// EPT.Sfx.manage('sound', 'switch', this, this.buttonSound, this.textSound);
 	}
 	clickMusic() {
 		EPT.Sfx.play('click');
-		EPT.Sfx.manage('music', 'switch', this, this.buttonMusic, this.textMusic);
+		// EPT.Sfx.manage('music', 'switch', this, this.buttonMusic, this.textMusic);
 	}
 	clickCredits() {
 		EPT.Sfx.play('click');

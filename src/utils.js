@@ -1,84 +1,114 @@
 var EPT = {};
 
 EPT.Sfx = {
-	manage: function(type, mode, game, button, label) {
-		switch(mode) {
-			case 'init': {
-        EPT.Storage.initUnset('EPT-'+type, true);
-        EPT.Sfx.status = EPT.Sfx.status || [];
-        EPT.Sfx.status[type] = EPT.Storage.get('EPT-'+type);
-        if(type == 'sound') {
-          EPT.Sfx.sounds = [];
-          EPT.Sfx.sounds['click'] = game.sound.add('sound-click');
-        }
-        else { // music
-          if(!EPT.Sfx.music || !EPT.Sfx.music.isPlaying) {
-            EPT.Sfx.music = game.sound.add('music-theme');
-            EPT.Sfx.music.volume = 0.5;
-          }
-        }
-				break;
-			}
-			case 'on': {
-				EPT.Sfx.status[type] = true;
-				break;
-			}
-			case 'off': {
-				EPT.Sfx.status[type] = false;
-				break;
-			}
-			case 'switch': {
-				EPT.Sfx.status[type] =! EPT.Sfx.status[type];
-				break;
-			}
-			default: {}
-    }
-    EPT.Sfx.update(type, button, label);
-
-    if(type == 'music' && EPT.Sfx.music) {
-      if(EPT.Sfx.status['music']) {
-        if(!EPT.Sfx.music.isPlaying) {
-          EPT.Sfx.music.play({loop:true});
-        }
-      }
-      else {
-        EPT.Sfx.music.stop();
-      }
-    }
-
-    EPT.Storage.set('EPT-'+type, EPT.Sfx.status[type]);
-	},
-	play: function(audio) {
-    if(audio == 'music') {
-      if(EPT.Sfx.status['music'] && EPT.Sfx.music && !EPT.Sfx.music.isPlaying) {
+  init: function (game) {
+    game.sound.pauseOnBlur = false;
+    EPT.Sfx.music = game.sound.add('music-theme');
+    // EPT.Sfx.music.volume = 0.5;
+    EPT.Sfx.sounds = [];
+    EPT.Sfx.sounds['click'] = game.sound.add('sound-click');
+    game.input.on('pointerdown', function () {
+      game.sound.unlock();
+      if (!game.sound.locked) {
         EPT.Sfx.music.play({loop:true});
       }
-    }
-    else { // sound
-      if(EPT.Sfx.status['sound'] && EPT.Sfx.sounds && EPT.Sfx.sounds[audio]) {
-        EPT.Sfx.sounds[audio].play();
+      else {  // IF Not wait on unlock event 
+        game.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
+          EPT.Sfx.music.play({loop:true});
+        })
       }
-    }
+    }, game);
   },
-  update: function(type, button, label) {
-    if(button) {
-      if(EPT.Sfx.status[type]) {
-        button.setTexture('button-'+type+'-on');
-      }
-      else {
-        button.setTexture('button-'+type+'-off');
-      }
-    }
-    if(label) {
-      if(EPT.Sfx.status[type]) {
-        label.setText(EPT.Lang.text[EPT.Lang.current][type+'-on']);
-      }
-      else {
-        label.setText(EPT.Lang.text[EPT.Lang.current][type+'-off']);
-      }
+  play: function(audio) {
+    
+    if(EPT.Sfx.sounds && EPT.Sfx.sounds[audio]) {
+      console.log("play");
+      EPT.Sfx.sounds[audio].play();
+      
     }
   }
-};
+}
+
+// EPT.Sfx = {
+// 	manage: function(type, mode, game, button, label) {
+// 		switch(mode) {
+// 			case 'init': {
+//         EPT.Storage.initUnset('EPT-'+type, true);
+//         EPT.Sfx.status = EPT.Sfx.status || [];
+//         EPT.Sfx.status[type] = EPT.Storage.get('EPT-'+type);
+//         if(type == 'sound') {
+//           EPT.Sfx.sounds = [];
+//           EPT.Sfx.sounds['click'] = game.sound.add('sound-click');
+//         }
+//         else { // music
+//           if(!EPT.Sfx.music || !EPT.Sfx.music.isPlaying) {
+//             EPT.Sfx.music = game.sound.add('music-theme');
+//             EPT.Sfx.music.volume = 0.5;
+//           }
+//         }
+// 				break;
+// 			}
+// 			case 'on': {
+// 				EPT.Sfx.status[type] = true;
+// 				break;
+// 			}
+// 			case 'off': {
+// 				EPT.Sfx.status[type] = false;
+// 				break;
+// 			}
+// 			case 'switch': {
+// 				EPT.Sfx.status[type] =! EPT.Sfx.status[type];
+// 				break;
+// 			}
+// 			default: {}
+//     }
+//     EPT.Sfx.update(type, button, label);
+
+//     if(type == 'music' && EPT.Sfx.music) {
+//       if(EPT.Sfx.status['music']) {
+//         if(!EPT.Sfx.music.isPlaying) {
+//           EPT.Sfx.music.play({loop:true});
+//         }
+//       }
+//       else {
+//         EPT.Sfx.music.stop();
+//       }
+//     }
+
+//     EPT.Storage.set('EPT-'+type, EPT.Sfx.status[type]);
+// 	},
+// 	play: function(audio) {
+//     if(audio == 'music') {
+//       if(EPT.Sfx.status['music'] && EPT.Sfx.music && !EPT.Sfx.music.isPlaying) {
+//         EPT.Sfx.music.play({loop:true});
+//       }
+//     }
+//     else { // sound
+//       if(EPT.Sfx.status['sound'] && EPT.Sfx.sounds && EPT.Sfx.sounds[audio]) {
+//         EPT.Sfx.sounds[audio].play();
+//       }
+//     }
+//   },
+//   update: function(type, button, label) {
+//     if(button) {
+//       if(EPT.Sfx.status[type]) {
+//         button.setTexture('button-'+type+'-on');
+//       }
+//       else {
+//         button.setTexture('button-'+type+'-off');
+//       }
+//     }
+//     if(label) {
+//       if(EPT.Sfx.status[type]) {
+//         label.setText(EPT.Lang.text[EPT.Lang.current][type+'-on']);
+//       }
+//       else {
+//         label.setText(EPT.Lang.text[EPT.Lang.current][type+'-off']);
+//       }
+//     }
+//   }
+// };
+
 EPT.fadeOutIn = function(passedCallback, context) {
   context.cameras.main.fadeOut(250);
   context.time.addEvent({

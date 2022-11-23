@@ -211,8 +211,9 @@ class MainMenu extends Phaser.Scene {
         this.load.on('complete', function(){
             console.log('[EPT] All files loaded in the background.');
             this.bgFilesLoaded = true;
-            EPT.Sfx.manage('music', 'init', this);
-            EPT.Sfx.manage('sound', 'init', this);
+            EPT.Sfx.init(this);
+            // EPT.Sfx.manage('music', 'init', this);
+            // EPT.Sfx.manage('sound', 'init', this);
             if(this.waitingForSettings) {
                 this.clickSettings();
             }

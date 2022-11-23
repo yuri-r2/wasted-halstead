@@ -4,26 +4,36 @@ EPT.Sfx = {
   init: function (game) {
     game.sound.pauseOnBlur = false;
     EPT.Sfx.music = game.sound.add('music-theme');
-    // EPT.Sfx.music.volume = 0.5;
+    EPT.Sfx.music.volume = 0.5;
     EPT.Sfx.sounds = [];
     EPT.Sfx.sounds['click'] = game.sound.add('sound-click');
+    EPT.Sfx.sounds['applause'] = game.sound.add('sound-applause');
     game.input.on('pointerdown', function () {
       game.sound.unlock();
-      if (!game.sound.locked) {
-        EPT.Sfx.music.play({loop:true});
-      }
-      else {  // IF Not wait on unlock event 
-        game.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
+      if (!EPT.Sfx.music.isPlaying){
+        if (!game.sound.locked) {
           EPT.Sfx.music.play({loop:true});
-        })
+        }
+        else{  // IF Not wait on unlock event 
+          game.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
+            EPT.Sfx.music.play({loop:true});
+          })
+        }
       }
     }, game);
   },
-  play: function(audio) {
-    
+  play: function(audio, game) {
     if(EPT.Sfx.sounds && EPT.Sfx.sounds[audio]) {
       console.log("play");
-      EPT.Sfx.sounds[audio].play();
+      // game.sound.unlock();
+      if (!game.sound.locked) {
+        EPT.Sfx.sounds[audio].play();
+      }
+      // else{  // IF Not wait on unlock event 
+      //   game.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
+      //     EPT.Sfx.sounds[audio].play();
+      //   })
+      // }
       
     }
   }

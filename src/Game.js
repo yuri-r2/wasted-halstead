@@ -35,7 +35,7 @@ class Game extends Phaser.Scene {
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		this.gameItem = new GameItem(null, 'recycle-cheerios', this.addPoints, this, 'static');
+		this.gameItem = new GameItem(null, 'recycle-cheerios', null, this, 'static');
 		this.updateItem();
 		
 		this.binCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 250, function(){this.clickBin('compost');}, this);

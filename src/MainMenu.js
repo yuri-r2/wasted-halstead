@@ -70,12 +70,12 @@ class MainMenu extends Phaser.Scene {
         }
     }
     clickEnclave() {
-        EPT.Sfx.play('click');
+        EPT.Sfx.play('click', this);
         window.top.location.href = 'https://enclavegames.com/';
     }
     clickSettings() {
         if(this.bgFilesLoaded) {
-            EPT.Sfx.play('click');
+            EPT.Sfx.play('click', this);
             if(this.loadImage) {
                 this.loadImage.destroy();
             }
@@ -98,7 +98,7 @@ class MainMenu extends Phaser.Scene {
     }
     clickStart() {
         if(this.bgFilesLoaded) {
-            EPT.Sfx.play('click');
+            EPT.Sfx.play('click', this);
             if(this.loadImage) {
                 this.loadImage.destroy();
             }

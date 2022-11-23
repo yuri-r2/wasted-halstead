@@ -9,12 +9,10 @@ EPT.Sfx = {
         EPT.Sfx.status[type] = EPT.Storage.get('EPT-'+type);
         if(type == 'sound') {
           EPT.Sfx.sounds = [];
-          game.sound.unlock();
           EPT.Sfx.sounds['click'] = game.sound.add('sound-click');
         }
         else { // music
           if(!EPT.Sfx.music || !EPT.Sfx.music.isPlaying) {
-            game.sound.unlock();
             EPT.Sfx.music = game.sound.add('music-theme');
             EPT.Sfx.music.volume = 0.5;
           }

@@ -198,8 +198,8 @@ class MainMenu extends Phaser.Scene {
                 ['button-back', 'img/button-back.png', {frameWidth:70,frameHeight:70}]
             ],
             'audio': [
-                ['sound-click', ['sfx/audio-button.mp3']],
-                ['sound-applause', ['sfx/applause.mp3']],
+                ['sound-click', ['sfx/button-click-long.mp3']],
+                ['sound-gameover', ['sfx/GameOver.mp3']],
                 ['sound-trash', ['sfx/TrashClose.mp3']],
                 ['music-theme', ['sfx/music-bitsnbites-liver.mp3']]
             ]

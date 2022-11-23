@@ -142,7 +142,7 @@ class Game extends Phaser.Scene {
 	endGame(){
 		this._runOnce = false;
         this.stateStatus = 'gameover';
-		EPT.Sfx.play('applause', this);
+		EPT.Sfx.play('gameover', this);
 	}
 	statePlaying() {
         if(this._time === 0) {

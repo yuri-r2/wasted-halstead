@@ -109,7 +109,7 @@ class Game extends Phaser.Scene {
     managePause() {
         this._gamePaused =! this._gamePaused;
         this.currentTimer.paused =! this.currentTimer.paused;
-		EPT.Sfx.play('click', this);
+		EPT.Sfx.play('click');
 		if(this._gamePaused) {
 			EPT.fadeOutIn(function(self){
 				self.buttonPause.input.enabled = false;
@@ -287,11 +287,11 @@ class Game extends Phaser.Scene {
 	}
 
 	stateRestart() {
-		EPT.Sfx.play('click', this);
+		EPT.Sfx.play('click');
         EPT.fadeOutScene('Game', this);
 	}
 	stateBack() {
-		EPT.Sfx.play('click', this);
+		EPT.Sfx.play('click');
 		EPT.fadeOutScene('MainMenu', this);
 	}
 	gameoverScoreTween() {

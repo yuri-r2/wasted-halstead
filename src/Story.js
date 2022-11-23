@@ -21,7 +21,7 @@ class Story extends Phaser.Scene {
 		this.cameras.main.fadeIn(250, 0, 0, 0);
 	}
 	clickContinue() {
-		EPT.Sfx.play('click', this);
+		EPT.Sfx.play('click');
 		EPT.fadeOutScene('Game', this);
 	}
 };

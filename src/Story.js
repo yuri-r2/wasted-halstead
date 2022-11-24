@@ -15,8 +15,8 @@ class Story extends Phaser.Scene {
 		buttonContinue.x = EPT.world.width+buttonContinue.width+20;
 		this.tweens.add({targets: buttonContinue, x: EPT.world.width-20, duration: 500, ease: 'Back'});
 
-		this.keyEnter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
-		this.keyEnter.on('down', function(key, event) { this.clickContinue(); }, this);
+		//this.keyEnter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+		//this.keyEnter.on('down', function(key, event) { this.clickContinue(); }, this);
 
 		this.cameras.main.fadeIn(250, 0, 0, 0);
 	}

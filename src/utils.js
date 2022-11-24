@@ -1,5 +1,8 @@
-var EPT = {};
+const COLOR_PRIMARY = 0x4e342e;
+const COLOR_LIGHT = 0x7b5e57;
+const COLOR_DARK = 0x260e04;
 
+var EPT = {};
 EPT.Sfx = {
   init: function (game) {
     game.sound.pauseOnBlur = false;
@@ -354,7 +357,9 @@ EPT.Lang = {
       'gameplay-timeleft': 'Time left: ',
       'gameplay-paused': 'PAUSED',
       'gameplay-gameover': 'GAME OVER',
-      'menu-highscore': 'Highscore: ',
+      'menu-highscore': 'Highscore:  ',
+      'menu-rank': 'Rank:  ',
+      'menu-username': 'Name:  ',
       'screen-story-howto': 'Click on the appropriate\nbin to dispose of the given item!\n\n\n\nif the item requires special\ndisposal - click on the item\nitself to reject it!'
     },
     'pl': {
@@ -399,6 +404,125 @@ EPT.Lang = {
     }
   }
 };
+
+EPT.leaderboardManager = {
+ initLeaderboard: function(scene){
+  const firebaseConfig = {
+      apiKey: "AIzaSyAcKoJiaLeGcwvmJBZ6qiI2H0O0ZyKNTU4",
+      authDomain: "phaser-waste-leaderboard.firebaseapp.com",
+      projectId: "phaser-waste-leaderboard",
+      storageBucket: "phaser-waste-leaderboard.appspot.com",
+      messagingSenderId: "417569878265",
+      appId: "1:417569878265:web:3dc71c82f6d7273a627228"
+    };
+    var rexFire = scene.plugins.get('rexfirebaseplugin').initializeApp(firebaseConfig);
+    var leaderBoard = rexFire.add.leaderBoard({
+      root: 'leaderboard-test',
+      timeFilters: false,
+      boardID: 'mainBoardID',
+      tag: 'mainTag',
+      pageItemCount: 10
+    })
+    EPT.leaderBoard = leaderBoard;
+  },
+  displayTopScores: function(scene) {
+    EPT.leaderBoard.loadFirstPage()
+    .then(function(scores) {
+        scores.forEach((el, index) => {
+            index = index + 1
+            var offsetY = index * 30;
+            var fontScore = { font: '30px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 3 };
+            var textScore = scene.add.text(30, EPT.world.centerY-150 + offsetY, (index + '. ' + el.userName + ': ' + el.score), fontScore);
+        });
+    })
+    .catch(function(error) {console.log(error)})
+  },
+  getScoreDialog: function (scene, score){
+		var scoreDialog = EPT.leaderboardManager.createScoreDialog(scene, {
+            x: EPT.world.centerX,
+            y: EPT.world.centerY,
+            title: 'Enter your name to\nsubmit this score',
+            username: '',
+        })
+            .on('submit!', function (username) {
+                EPT.leaderBoard.setUser({
+                  userID: EPT.Storage.get('userID'),
+                  userName: username
+                });
+                EPT.leaderBoard.post(score)
+                .then(function(record) {
+                  EPT.Sfx.play('click', scene);
+                  EPT.fadeOutScene('MainMenu', scene);
+                })
+                .catch(function(error) {console.log(error)})
+            })
+            //.drawBounds(this.add.graphics(), 0xff0000);
+            .popUp(500);
+	},
+  createScoreDialog: function(scene, config, onSubmit){
+    const GetValue = Phaser.Utils.Objects.GetValue;
+    var username = GetValue(config, 'username', '');
+    var title = GetValue(config, 'title', 'Welcome');
+    var x = GetValue(config, 'x', 0);
+    var y = GetValue(config, 'y', 0);
+    var width = GetValue(config, 'width', undefined);
+    var height = GetValue(config, 'height', undefined);
+
+    var background = scene.rexUI.add.roundRectangle(0, 0, 10, 10, 10, COLOR_PRIMARY);
+    var titleField = scene.add.text(0, 0, title);
+
+    var userNameField = scene.rexUI.add.label({
+        orientation: 'x',
+        background: scene.rexUI.add.roundRectangle(0, 0, 10, 10, 10).setStrokeStyle(2, COLOR_LIGHT),
+        icon: scene.add.image(0, 0, 'user'),
+        text: scene.rexUI.add.BBCodeText(0, 0, username, { fixedWidth: 150, fixedHeight: 36, valign: 'center' }),
+        space: { top: 5, bottom: 5, left: 5, right: 5, icon: 10, }
+    })
+    .setInteractive()
+    .on('pointerdown', function () {
+        var config = {
+            onTextChanged: function(textObject, text) {
+                username = text;
+                textObject.text = text;
+            }
+        }
+        scene.rexUI.edit(userNameField.getElement('text'), config);
+    });
+
+    var loginButton = scene.rexUI.add.label({
+        orientation: 'x',
+        background: scene.rexUI.add.roundRectangle(0, 0, 10, 10, 10, COLOR_LIGHT),
+        text: scene.add.text(0, 0, 'Submit!'),
+        space: { top: 8, bottom: 8, left: 8, right: 8 }
+    })
+    .setInteractive()
+    .on('pointerdown', function () {
+        loginDialog.emit('submit!', username);
+    });
+
+    var loginDialog = scene.rexUI.add.sizer({
+      orientation: 'y',
+      x: x,
+      y: y,
+      width: width,
+      height: height,
+    })
+      .addBackground(background)
+      .add(titleField, 0, 'center', { top: 10, bottom: 10, left: 10, right: 10 }, false)
+      .add(userNameField, 0, 'left', { bottom: 10, left: 10, right: 10 }, true)
+      // .add(passwordField, 0, 'left', { bottom: 10, left: 10, right: 10 }, true)
+      .add(loginButton, 0, 'center', { bottom: 10, left: 10, right: 10 }, false)
+      .layout();
+
+  return loginDialog;
+  }
+}
+
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
 
 // // Usage tracking - remember to replace with your own!
 // var head = document.getElementsByTagName('head')[0];

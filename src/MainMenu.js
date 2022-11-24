@@ -11,10 +11,10 @@ class MainMenu extends Phaser.Scene {
 
         this.waitingForSettings = false;
 
-        var title = this.add.sprite(EPT.world.centerX, EPT.world.centerY-50, 'bear');
+        var title = this.add.sprite(EPT.world.centerX, EPT.world.centerY-250, 'bear');
         title.setOrigin(0.5);
 
-        this.input.keyboard.on('keydown', this.handleKey, this);
+        //this.input.keyboard.on('keydown', this.handleKey, this);
 
         this.tweens.add({targets: title, angle: title.angle-2, duration: 1000, ease: 'Sine.easeInOut' });
         this.tweens.add({targets: title, angle: title.angle+4, duration: 2000, ease: 'Sine.easeInOut', yoyo: 1, loop: -1, delay: 1000 });
@@ -28,21 +28,42 @@ class MainMenu extends Phaser.Scene {
         this.buttonStart = new Button(EPT.world.width-20, EPT.world.height-20, 'button-start', this.clickStart, this);
         this.buttonStart.setOrigin(1, 1);
 
-		var fontHighscore = { font: '38px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 5 };
-		var textHighscore = this.add.text(EPT.world.width-30, 60, EPT.text['menu-highscore']+highscore, fontHighscore);
-		textHighscore.setOrigin(1, 0);
+        EPT.leaderboardManager.displayTopScores(this);
+
+        var userScore = 0;
+        var userRank = -1;
+        var userName = '';
+
+        var fontHighscore = { font: '30px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 5 };
+		var textHighscore = this.add.text(10, 0, EPT.text['menu-highscore']+userScore, fontHighscore);
+        var textRank = this.add.text(10, 0, EPT.text['menu-rank']+userRank, fontHighscore);
+        var textUsername = this.add.text(10, 0, EPT.text['menu-username']+userName, fontHighscore);
+
+        this.tweens.add({targets: textHighscore, y: 10, duration: 500, delay: 100, ease: 'Back'});
+        this.tweens.add({targets: textRank, y: 40, duration: 500, delay: 100, ease: 'Back'});
+        this.tweens.add({targets: textUsername, y: 70, duration: 500, delay: 100, ease: 'Back'});
+
+        
+        EPT.leaderBoard.getScore(EPT.Storage.get('userID'))
+        .then(function(scoreObj){ 
+            userScore = scoreObj.score;
+            textHighscore.setText(EPT.text['menu-highscore']+userScore);
+            userName = scoreObj.userName;
+            textUsername.setText(EPT.text['menu-username']+userName);
+        })
+        .catch(function(error) { })
+        
+        EPT.leaderBoard.getRank(EPT.Storage.get('userID'))
+        .then(function(rankObj) {
+            userRank = rankObj.rank + 1;
+            textRank.setText(EPT.text['menu-rank']+userRank);
+        })
+        .catch(function(error) { })
+	
 
 		this.buttonStart.x = EPT.world.width+this.buttonStart.width+20;
         this.tweens.add({targets: this.buttonStart, x: EPT.world.width-20, duration: 500, ease: 'Back'});
 
-		// buttonEnclave.x = -buttonEnclave.width-20;
-        // this.tweens.add({targets: buttonEnclave, x: 20, duration: 500, ease: 'Back'});
-
-        // this.buttonSettings.y = -this.buttonSettings.height-20;
-        // this.tweens.add({targets: this.buttonSettings, y: 20, duration: 500, ease: 'Back'});
-
-        textHighscore.y = -textHighscore.height-30;
-        this.tweens.add({targets: textHighscore, y: 40, duration: 500, delay: 100, ease: 'Back'});
 
         this.cameras.main.fadeIn(250);
 
@@ -120,7 +141,7 @@ class MainMenu extends Phaser.Scene {
         }
     }
     startPreloadInTheBackground() {
-        console.log('[EPT] Starting background loading...');
+        // console.log('[EPT] Starting background loading...');
         this.load.image('img/clickme');
         this.load.image('img/compost');
         this.load.image('img/trash');
@@ -211,7 +232,7 @@ class MainMenu extends Phaser.Scene {
             }, this);
         };
         this.load.on('complete', function(){
-            console.log('[EPT] All files loaded in the background.');
+            // console.log('[EPT] All files loaded in the background.');
             this.bgFilesLoaded = true;
             EPT.Sfx.init(this);
             // EPT.Sfx.manage('music', 'init', this);

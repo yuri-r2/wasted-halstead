@@ -5,7 +5,7 @@ class Settings extends Phaser.Scene {
     create() {
 		this.add.sprite(0, 0, 'background').setOrigin(0, 0);
 		this.screenName = 'settings';
-		this.input.keyboard.on('keydown', this.handleKey, this);
+		//this.input.keyboard.on('keydown', this.handleKey, this);
 
 		this.buttonBack = new Button(20, 20, 'button-back', this.clickBack, this);
 		this.buttonBack.setOrigin(0, 0);
@@ -226,7 +226,7 @@ class Settings extends Phaser.Scene {
 		this.screenName = 'credits';
 	}
     clickBeer() {
-        console.log('Beer clicked!');
+        // console.log('Beer clicked!');
         EPT.Sfx.play('click', this);
         window.top.location.href = 'https://www.paypal.me/end3r';
     }

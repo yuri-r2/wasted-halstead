@@ -27,6 +27,15 @@ class Game extends Phaser.Scene {
     constructor() {
         super('Game');
     }
+	preload() {
+		this.load.scenePlugin({
+            key: 'rexuiplugin',
+            url: 'src/plugins/rexuiplugin.min.js',
+            sceneKey: 'rexUI'
+        }) 
+        // this.load.plugin('rextexteditplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rextexteditplugin.min.js', true)
+        this.load.image('user', 'img/person.png');
+	}
     create() {
         this.add.sprite(0, 0, 'background').setOrigin(0,0);
         this.stateStatus = null;
@@ -58,7 +67,7 @@ class Game extends Phaser.Scene {
             loop: true
         });
 
-		this.input.keyboard.on('keydown', this.handleKey, this);
+		//this.input.keyboard.on('keydown', this.handleKey, this);
         this.cameras.main.fadeIn(250);
         this.stateStatus = 'playing';
     }
@@ -153,6 +162,7 @@ class Game extends Phaser.Scene {
         this.screenPausedGroup.toggleVisible();
 	}
 	stateGameover() {
+		EPT.leaderboardManager.getScoreDialog(this, this._score);
 		this.currentTimer.paused =! this.currentTimer.paused;
 		EPT.Storage.setHighscore('EPT-highscore',this._score);
 		EPT.fadeOutIn(function(self){
@@ -296,6 +306,7 @@ class Game extends Phaser.Scene {
 		EPT.Sfx.play('click', this);
 		EPT.fadeOutScene('MainMenu', this);
 	}
+
 	gameoverScoreTween() {
 		this.screenGameoverScore.setText(EPT.text['gameplay-score']+'0');
 		if(this._score) {

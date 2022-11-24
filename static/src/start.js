@@ -38,8 +38,8 @@ var gameConfig = {
 game = new Phaser.Game(gameConfig);
 window.focus();
 
-// Usage tracking
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'UA-30485283-26');
+// // Usage tracking
+// window.dataLayer = window.dataLayer || [];
+// function gtag(){dataLayer.push(arguments);}
+// gtag('js', new Date());
+// gtag('config', 'UA-30485283-26');

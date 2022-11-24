@@ -24,7 +24,6 @@ EPT.Sfx = {
     }, game);
   },
   play: function(audio, game) {
-    console.log(audio);
     if(EPT.Sfx.sounds && EPT.Sfx.sounds[audio]) {
       if (!game.sound.locked) {
         EPT.Sfx.sounds[audio].play();
@@ -401,15 +400,15 @@ EPT.Lang = {
   }
 };
 
-// Usage tracking - remember to replace with your own!
-var head = document.getElementsByTagName('head')[0];
-var script = document.createElement('script');
-script.type = 'text/javascript';
-script.onload = function() {
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'UA-30485283-26');
-}
-script.src = 'https://www.googletagmanager.com/gtag/js?id=UA-30485283-26';
-head.appendChild(script);
+// // Usage tracking - remember to replace with your own!
+// var head = document.getElementsByTagName('head')[0];
+// var script = document.createElement('script');
+// script.type = 'text/javascript';
+// script.onload = function() {
+//   window.dataLayer = window.dataLayer || [];
+//   function gtag(){dataLayer.push(arguments);}
+//   gtag('js', new Date());
+//   gtag('config', 'UA-30485283-26');
+// }
+// script.src = 'https://www.googletagmanager.com/gtag/js?id=UA-30485283-26';
+// head.appendChild(script);

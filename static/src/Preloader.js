@@ -18,13 +18,13 @@ class Preloader extends Phaser.Scene {
 
 		var resources = {
 			'image': [
-				['title', 'img/title.png'],
-				['bear', 'img/bear.png']
+				['title', '/static/img/title.png'],
+				['bear', '/static/img/bear.png']
 			],
 			'spritesheet': [
-				['button-start', 'img/button-start.png', {frameWidth:180,frameHeight:180}],
-				['button-settings', 'img/button-settings.png', {frameWidth:80,frameHeight:80}],
-				['loader', 'img/loader.png', {frameWidth:45,frameHeight:45}]
+				['button-start', '/static/img/button-start.png', {frameWidth:180,frameHeight:180}],
+				['button-settings', '/static/img/button-settings.png', {frameWidth:80,frameHeight:80}],
+				['loader', '/static/img/loader.png', {frameWidth:45,frameHeight:45}]
 			]
 		};
 		for(var method in resources) {

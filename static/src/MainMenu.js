@@ -121,32 +121,32 @@ class MainMenu extends Phaser.Scene {
     }
     startPreloadInTheBackground() {
         console.log('[EPT] Starting background loading...');
-        this.load.image('img/clickme');
-        this.load.image('img/compost');
-        this.load.image('img/trash');
-        this.load.image('img/recycle');
+        this.load.image('/static/img/clickme');
+        this.load.image('/static/img/compost');
+        this.load.image('/static/img/trash');
+        this.load.image('/static/img/recycle');
 
 
-        this.load.image('img/compost-clamshell');
-        this.load.image('img/compost-coffeegrounds');
-        this.load.image('img/compost-dylans');
-        this.load.image('img/compost-eggshells');
-        this.load.image('img/compost-papertowel');
-        this.load.image('img/compost-parchment');
+        this.load.image('/static/img/compost-clamshell');
+        this.load.image('/static/img/compost-coffeegrounds');
+        this.load.image('/static/img/compost-dylans');
+        this.load.image('/static/img/compost-eggshells');
+        this.load.image('/static/img/compost-papertowel');
+        this.load.image('/static/img/compost-parchment');
 
-        this.load.image('img/trash-bluebell');
-        this.load.image('img/trash-bubblewrap');
-        this.load.image('img/trash-chewinggum');
-        this.load.image('img/trash-ketchup');
-        this.load.image('img/trash-milkcarton');
-        this.load.image('img/trash-plasticbag');
+        this.load.image('/static/img/trash-bluebell');
+        this.load.image('/static/img/trash-bubblewrap');
+        this.load.image('/static/img/trash-chewinggum');
+        this.load.image('/static/img/trash-ketchup');
+        this.load.image('/static/img/trash-milkcarton');
+        this.load.image('/static/img/trash-plasticbag');
 
-        this.load.image('img/recycle-spaghettios');
-        this.load.image('img/recycle-aluminium');
-        this.load.image('img/recycle-cakecontainer');
-        this.load.image('img/recycle-cardboard');
-        this.load.image('img/recycle-cheerios');
-        this.load.image('img/recycle-dasani');
+        this.load.image('/static/img/recycle-spaghettios');
+        this.load.image('/static/img/recycle-aluminium');
+        this.load.image('/static/img/recycle-cakecontainer');
+        this.load.image('/static/img/recycle-cardboard');
+        this.load.image('/static/img/recycle-cheerios');
+        this.load.image('/static/img/recycle-dasani');
 
         this.load.once('filecomplete', this.addFiles, this);
         this.load.start();
@@ -154,54 +154,54 @@ class MainMenu extends Phaser.Scene {
     addFiles() {
         var resources = {
             'image': [
-                ['clickme', 'img/clickme.png'],
-                ['overlay', 'img/overlay.png'],
-                ['button-beer', 'img/button-beer.png'],
-                ['banner-beer', 'img/banner-beer.png'],
-                ['particle', 'img/particle.png'],
+                ['clickme', '/static/img/clickme.png'],
+                ['overlay', '/static/img/overlay.png'],
+                ['button-beer', '/static/img/button-beer.png'],
+                ['banner-beer', '/static/img/banner-beer.png'],
+                ['particle', '/static/img/particle.png'],
 
-                ['compost-clamshell', 'img/compost-clamshell.png'],
-                ['compost-coffeegrounds', 'img/compost-coffeegrounds.png'],
-                ['compost-dylans', 'img/compost-dylans.png'],
-                ['compost-eggshells', 'img/compost-eggshells.png'],
-                ['compost-papertowel', 'img/compost-papertowel.png'],
-                ['compost-parchment', 'img/compost-parchment.png'],
+                ['compost-clamshell', '/static/img/compost-clamshell.png'],
+                ['compost-coffeegrounds', '/static/img/compost-coffeegrounds.png'],
+                ['compost-dylans', '/static/img/compost-dylans.png'],
+                ['compost-eggshells', '/static/img/compost-eggshells.png'],
+                ['compost-papertowel', '/static/img/compost-papertowel.png'],
+                ['compost-parchment', '/static/img/compost-parchment.png'],
 
-                ['trash-bluebell', 'img/trash-bluebell.png'],
-                ['trash-bubblewrap', 'img/trash-bubblewrap.png'],
-                ['trash-chewinggum', 'img/trash-chewinggum.png'],
-                ['trash-ketchup', 'img/trash-ketchup.png'],
-                ['trash-milkcarton', 'img/trash-milkcarton.png'],
-                ['trash-plasticbag', 'img/trash-plasticbag.png'],
+                ['trash-bluebell', '/static/img/trash-bluebell.png'],
+                ['trash-bubblewrap', '/static/img/trash-bubblewrap.png'],
+                ['trash-chewinggum', '/static/img/trash-chewinggum.png'],
+                ['trash-ketchup', '/static/img/trash-ketchup.png'],
+                ['trash-milkcarton', '/static/img/trash-milkcarton.png'],
+                ['trash-plasticbag', '/static/img/trash-plasticbag.png'],
 
-                ['recycle-spaghettios', 'img/recycle-spaghettios.png'],
-                ['recycle-aluminium', 'img/recycle-aluminium.png'],
-                ['recycle-cakecontainer', 'img/recycle-cakecontainer.png'],
-                ['recycle-cardboard', 'img/recycle-cardboard.png'],
-                ['recycle-cheerios', 'img/recycle-cheerios.png'],
-                ['recycle-dasani', 'img/recycle-dasani.png']
+                ['recycle-spaghettios', '/static/img/recycle-spaghettios.png'],
+                ['recycle-aluminium', '/static/img/recycle-aluminium.png'],
+                ['recycle-cakecontainer', '/static/img/recycle-cakecontainer.png'],
+                ['recycle-cardboard', '/static/img/recycle-cardboard.png'],
+                ['recycle-cheerios', '/static/img/recycle-cheerios.png'],
+                ['recycle-dasani', '/static/img/recycle-dasani.png']
             ],
             'spritesheet': [
-                ['compost', 'img/compost.png', {frameWidth:220,frameHeight:300}],
-                ['trash', 'img/trash.png', {frameWidth:220,frameHeight:300}],
-                ['recycle', 'img/recycle.png', {frameWidth:220,frameHeight:300}],
-                ['button-continue', 'img/button-start.png', {frameWidth:180,frameHeight:180}],
-                ['button-mainmenu', 'img/button-mainmenu.png', {frameWidth:180,frameHeight:180}],
-                ['button-restart', 'img/button-tryagain.png', {frameWidth:180,frameHeight:180}],
-                ['button-achievements', 'img/button-achievements.png', {frameWidth:110,frameHeight:110}],
-                ['button-pause', 'img/button-pause.png', {frameWidth:80,frameHeight:80}],
-                ['button-credits', 'img/button-credits.png', {frameWidth:80,frameHeight:80}],
-                ['button-sound-on', 'img/button-sound-on.png', {frameWidth:80,frameHeight:80}],
-                ['button-sound-off', 'img/button-sound-off.png', {frameWidth:80,frameHeight:80}],
-                ['button-music-on', 'img/button-music-on.png', {frameWidth:80,frameHeight:80}],
-                ['button-music-off', 'img/button-music-off.png', {frameWidth:80,frameHeight:80}],
-                ['button-back', 'img/button-back.png', {frameWidth:70,frameHeight:70}]
+                ['compost', '/static/img/compost.png', {frameWidth:220,frameHeight:300}],
+                ['trash', '/static/img/trash.png', {frameWidth:220,frameHeight:300}],
+                ['recycle', '/static/img/recycle.png', {frameWidth:220,frameHeight:300}],
+                ['button-continue', '/static/img/button-start.png', {frameWidth:180,frameHeight:180}],
+                ['button-mainmenu', '/static/img/button-mainmenu.png', {frameWidth:180,frameHeight:180}],
+                ['button-restart', '/static/img/button-tryagain.png', {frameWidth:180,frameHeight:180}],
+                ['button-achievements', '/static/img/button-achievements.png', {frameWidth:110,frameHeight:110}],
+                ['button-pause', '/static/img/button-pause.png', {frameWidth:80,frameHeight:80}],
+                ['button-credits', '/static/img/button-credits.png', {frameWidth:80,frameHeight:80}],
+                ['button-sound-on', '/static/img/button-sound-on.png', {frameWidth:80,frameHeight:80}],
+                ['button-sound-off', '/static/img/button-sound-off.png', {frameWidth:80,frameHeight:80}],
+                ['button-music-on', '/static/img/button-music-on.png', {frameWidth:80,frameHeight:80}],
+                ['button-music-off', '/static/img/button-music-off.png', {frameWidth:80,frameHeight:80}],
+                ['button-back', '/static/img/button-back.png', {frameWidth:70,frameHeight:70}]
             ],
             'audio': [
-                ['sound-click', ['sfx/button-click-long.mp3']],
-                ['sound-gameover', ['sfx/GameOver.mp3']],
-                ['sound-trash', ['sfx/TrashClose.mp3']],
-                ['music-theme', ['sfx/TexasFight.mp3']]
+                ['sound-click', ['/static/sfx/button-click-long.mp3']],
+                ['sound-gameover', ['/static/sfx/GameOver.mp3']],
+                ['sound-trash', ['/static/sfx/TrashClose.mp3']],
+                ['music-theme', ['/static/sfx/TexasFight.mp3']]
             ]
         };            
         for(var method in resources) {

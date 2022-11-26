@@ -179,58 +179,137 @@ class Button extends Phaser.GameObjects.Image {
   }
 };
 
-class GameItem {
-  constructor(type, texture, callback, scene, noframes) {
+class GameItem extends Phaser.Physics.Matter.Image {
+  constructor(type, texture, scene) {
+    super(scene.matter.world, EPT.world.centerX, EPT.world.centerY-270, texture, 0, {scale: (0.1, 0.2), label: 'GameItem', ignoreGravity: true});
+    this.setScale(0.4, 0.4);
     this.type = type;
-    //Add Button/Image
-    this.image = new Button(EPT.world.centerX, EPT.world.centerY-270, texture, callback, scene, noframes);
     //Add Text Descrption
-    var fontItem = { font: '30px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 4, align: 'center' };
+    var fontItem = { font: '15px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 4, align: 'center' };
     this.text = new Phaser.GameObjects.Text(scene, EPT.world.centerX, EPT.world.centerY-100, type, fontItem);
     this.text.setOrigin(0.5,0);
+    scene.add.existing(this);
     scene.add.existing(this.text);
   }
 }
 
-class GameBin extends Phaser.GameObjects.Image {
-  constructor(type, x, y, callback, scene, noframes) {
-    super(scene, x, y, type, 0);
+class GameBin extends Phaser.Physics.Matter.Image {
+  constructor(type, x, y, scene) {
+    var Bodies = Phaser.Physics.Matter.Matter.Bodies;
+    var rect = Bodies.rectangle(0, 0, 150, 100);
+    super(scene.matter.world, x, y, type, 0);
+    this.setRectangle(100, 100, {label: 'bin', isStatic: true, isSensor: true });
+    this.setScale(1, 1);
+    
+    // this.setExistingBody(this.rect);
     this.type = type;
     this.setInteractive({ useHandCursor: true });
     this.on('pointerup', function() {
-      if(!noframes) {
-        this.setFrame(1);
-      }
+      this.setFrame(1);
     }, this);
 
     this.on('pointerdown', function() {
-      if(!noframes) {
-        this.setFrame(1);
-      }
-      callback.call(scene);
+      this.setFrame(1);
     }, this);
 
     this.on('pointerover', function() {
-      if(!noframes) {
-        this.setFrame(1);
-      }
+      this.setFrame(1);
     }, this);
 
     this.on('pointerout', function() {
-      if(!noframes) {
-        this.setFrame(0);
-      }
+      this.setFrame(0);
     }, this);
+
     this.setOrigin(0.5,0.5);
     this.setAlpha(0);
-    this.setScale(0.1);
+
+    
+
     scene.add.existing(this);
     scene.tweens.add({targets: this, alpha: 1, duration: 500, ease: 'Linear'});
-    scene.tweens.add({targets: this, scale: 1, duration: 500, ease: 'Back'});
+    // scene.tweens.add({targets: this, scale: 1, duration: 500, ease: 'Back'});
+
+    
   }
 }
 
-
+EPT.GameManager = {
+  binCollision: function (scene, binType, itemType){
+    console.log(binType, itemType)
+    if (itemType === binType){
+      
+      EPT.Sfx.play('trash', scene);
+      EPT.GameManager.addPoints(scene);
+      EPT.GameManager.updateItem(scene);
+    }
+    else {
+      EPT.GameManager.endGame(scene);
+    }
+  },
+  endGame: function (scene){
+    scene._runOnce = false;
+    scene.stateStatus = 'gameover';
+    //EPT.Sfx.play('gameover', scene);
+  },
+  addPoints: function(scene) {
+		scene._score += 1;
+    
+    scene.textScore.setText(EPT.text['gameplay-score']+scene._score);
+    var randX = Phaser.Math.Between(200, EPT.world.width-200);
+    var randY = Phaser.Math.Between(200, EPT.world.height-200);
+		var pointsAdded = scene.add.text(randX, randY, '+1', { font: '48px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 10 });
+		pointsAdded.setOrigin(0.5, 0.5);
+    scene.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
+    scene.cameras.main.shake(100, 0.01, true);
+  },
+  updateItem: function(scene){
+		var randomType = types[Math.floor(Math.random() * types.length)];
+		// scene.gameItem.type = randomType;
+		var randomItem = null;
+		var keys = null; 
+		var itemDescription = null;
+		switch (randomType){
+			case 'compost':
+				keys = Object.keys(compost_items)
+				randomItem = keys[Math.floor(Math.random() * keys.length)];
+				//make sure we are getting a different next item 
+				while (scene.gameItem && scene.gameItem.texture.key === randomItem){
+					randomItem = keys[Math.floor(Math.random() * keys.length)];
+				}
+				itemDescription = compost_items[randomItem];
+				break;
+			case 'trash':
+				keys = Object.keys(trash_items)
+				randomItem = keys[Math.floor(Math.random() * keys.length)];
+				//make sure we are getting a different next item 
+				while (scene.gameItem && scene.gameItem.texture.key === randomItem){
+					randomItem = keys[Math.floor(Math.random() * keys.length)];
+				}
+				itemDescription = trash_items[randomItem];
+				break;
+			case 'recycle':
+				keys = Object.keys(recycle_items)
+				randomItem = keys[Math.floor(Math.random() * keys.length)];
+				//make sure we are getting a different next item 
+				while (scene.gameItem && scene.gameItem.texture.key === randomItem){
+					randomItem = keys[Math.floor(Math.random() * keys.length)];
+				}
+				itemDescription = recycle_items[randomItem];
+				break;
+		}
+		// scene.gameItem.setTexture(randomItem);
+		// scene.gameItem.text.setText(itemDescription);
+    // scene.gameItem.setX(300);
+    // scene.gameItem.setY(300);
+    if (scene.gameItem){
+      scene.gameItem.text.destroy();
+      scene.gameItem.destroy();
+    }
+    scene.gameItem = new GameItem(randomType, randomItem, scene); 
+    scene.gameItem.text.setText(itemDescription);
+    
+	}
+}
 
 EPT.Storage = {
 	availability: function() {

@@ -4,6 +4,7 @@ class MainMenu extends Phaser.Scene {
         this.bgFilesLoaded = false;
     }
     create() {
+
         this.add.sprite(0, 0, 'background').setOrigin(0,0);
 
 		EPT.Storage.initUnset('EPT-highscore', 0);
@@ -14,16 +15,8 @@ class MainMenu extends Phaser.Scene {
         var title = this.add.sprite(EPT.world.centerX, EPT.world.centerY-250, 'bear');
         title.setOrigin(0.5);
 
-        //this.input.keyboard.on('keydown', this.handleKey, this);
-
         this.tweens.add({targets: title, angle: title.angle-2, duration: 1000, ease: 'Sine.easeInOut' });
         this.tweens.add({targets: title, angle: title.angle+4, duration: 2000, ease: 'Sine.easeInOut', yoyo: 1, loop: -1, delay: 1000 });
-
-        // this.buttonSettings = new Button(20, 20, 'button-settings', this.clickSettings, this);
-        // this.buttonSettings.setOrigin(0, 0);
-
-        // var buttonEnclave = new Button(20, EPT.world.height-40, 'logo-enclave', this.clickEnclave, this, 'static');
-        // buttonEnclave.setOrigin(0, 1);
 
         this.buttonStart = new Button(EPT.world.width-20, EPT.world.height-20, 'button-start', this.clickStart, this);
         this.buttonStart.setOrigin(1, 1);
@@ -75,46 +68,6 @@ class MainMenu extends Phaser.Scene {
                 },
                 callbackScope: this
             }, this);
-        }
-    }
-    handleKey(e) {
-        switch(e.code) {
-            case 'KeyS': {
-                this.clickSettings();
-                break;
-            }
-            case 'Enter': {
-                this.clickStart();
-                break;
-            }
-            default: {}
-        }
-    }
-    clickEnclave() {
-        EPT.Sfx.play('click', this);
-        window.top.location.href = 'https://enclavegames.com/';
-    }
-    clickSettings() {
-        if(this.bgFilesLoaded) {
-            EPT.Sfx.play('click', this);
-            if(this.loadImage) {
-                this.loadImage.destroy();
-            }
-            EPT.fadeOutScene('Settings', this);
-        }
-        else {
-            var animationFrames = this.anims.generateFrameNumbers('loader');
-            animationFrames.pop();
-            this.waitingForSettings = true;
-            // this.buttonSettings.setAlpha(0.1);
-            var loadAnimation = this.anims.create({
-                key: 'loading',
-                frames: animationFrames,
-                frameRate: 12,
-                repeat: -1
-            });
-            this.loadImage = this.add.sprite(30, 30, 'loader').setOrigin(0,0).setScale(1.25);
-            this.loadImage.play('loading');
         }
     }
     clickStart() {

@@ -39,6 +39,15 @@ var gameConfig = {
 	audio: {
 		disableWebAudio: true
 	},
+	physics: {
+        default: 'matter',
+		matter: {
+            debug: true,
+            gravity: {
+                y: 0
+            },
+        }
+    },
 	scene: [Boot, Preloader, MainMenu, Settings, Story, Game]
 }
 game = new Phaser.Game(gameConfig);

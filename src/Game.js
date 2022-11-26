@@ -37,6 +37,8 @@ class Game extends Phaser.Scene {
         this.load.image('user', 'img/person.png');
 	}
     create() {
+		
+
         this.add.sprite(0, 0, 'background').setOrigin(0,0);
         this.stateStatus = null;
         this._score = 0;
@@ -44,12 +46,44 @@ class Game extends Phaser.Scene {
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		this.gameItem = new GameItem(null, 'recycle-cheerios', null, this, 'static');
-		this.updateItem();
+		EPT.GameManager.updateItem(this);
+
+		this.matter.world.setBounds();
+
+		// this.matter.add.image(400, 100, 'recycle-dasani', null,
+		// { label: 'waste-item', chamfer: 16 })
+		// .setBounce(0.9)
+		// .setIgnoreGravity(true);;
+
+		this.matter.add.mouseSpring({ length: 1, stiffness: 0.6 });
+
+		this.matter.world.on('collisionstart', function (event) {
+			var pairs = event.pairs;
+
+			for (var i = 0; i < pairs.length; i++){
+				var bodyA = pairs[i].bodyA;
+				var bodyB = pairs[i].bodyB;
+				var binBody;
+				var itemBody;
+				if (bodyA.isSensor)
+                {
+                    binBody = bodyA;
+                    itemBody = bodyB;
+                }
+                else if (bodyB.isSensor)
+                {
+                    binBody = bodyB;
+                    itemBody = bodyA;
+                }
+				else { continue; }
+				EPT.GameManager.binCollision(this.scene, binBody.gameObject.type, this.scene.gameItem.type);
+			}
+	
+		});
 		
-		this.binCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 250, function(){this.clickBin('compost');}, this);
-		this.binTrash = new GameBin('trash', EPT.world.centerX-5, EPT.world.centerY + 250, function(){this.clickBin('trash');}, this);
-		this.binRecycle = new GameBin('recycle', EPT.world.centerX + 200, EPT.world.centerY + 250, function(){this.clickBin('recycle');}, this);
+		this.binCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 250, this);
+		this.binTrash = new GameBin('trash', EPT.world.centerX-5, EPT.world.centerY + 250, this);
+		this.binRecycle = new GameBin('recycle', EPT.world.centerX + 200, EPT.world.centerY + 250, this);
 
         
         this.initUI();
@@ -94,27 +128,7 @@ class Game extends Phaser.Scene {
 			}
 		}
 	}
-    handleKey(e) {
-        switch(e.code) {
-            case 'Enter': {
-                this.addPoints();
-                break;
-            }
-            case 'KeyP': {
-                this.managePause();
-                break;
-            }
-            case 'KeyB': {
-                this.stateBack();
-                break;
-            }
-            case 'KeyT': {
-                this.stateRestart();
-                break;
-            }
-            default: {}
-        }
-    }
+    
     managePause() {
         this._gamePaused =! this._gamePaused;
         this.currentTimer.paused =! this.currentTimer.paused;
@@ -125,6 +139,7 @@ class Game extends Phaser.Scene {
 				self.binCompost.input.enabled = false;
 				self.binTrash.input.enabled = false;
 				self.binRecycle.input.enabled = false;
+				self.gameItem.input.enabled = false;
 				self.stateStatus = 'paused';
 				self._runOnce = false;
 			}, this);
@@ -139,6 +154,7 @@ class Game extends Phaser.Scene {
 				self.binCompost.input.enabled = true;
 				self.binTrash.input.enabled = true;
 				self.binRecycle.input.enabled = true;
+				self.gameItem.input.enabled = true;
 				self._stateStatus = 'playing';
 				self._runOnce = false;
 			}, this);
@@ -148,14 +164,12 @@ class Game extends Phaser.Scene {
 			this.tweens.add({targets: this.screenPausedContinue, x: EPT.world.width+this.screenPausedContinue.width+20, duration: 500, ease: 'Back'});
         }
     }
-	endGame(){
-		this._runOnce = false;
-        this.stateStatus = 'gameover';
-		EPT.Sfx.play('gameover', this);
-	}
+
 	statePlaying() {
+		this.gameItem.text.x = this.gameItem.x;
+		this.gameItem.text.y = this.gameItem.y - 60;
         if(this._time === 0) {
-            this.endGame();
+            EPT.GameManager.endGame(this);
         }
 	}
 	statePaused() {
@@ -171,6 +185,8 @@ class Game extends Phaser.Scene {
 			self.binCompost.input.enabled = false;
 			self.binTrash.input.enabled = false;
 			self.binRecycle.input.enabled = false;
+			self.gameItem.text.destroy();
+			self.gameItem.destroy();
 			self.screenGameoverScore.setText(EPT.text['gameplay-score']+self._score);
 			self.gameoverScoreTween();
 		}, this);
@@ -237,66 +253,6 @@ class Game extends Phaser.Scene {
 		this.screenGameoverGroup.add(this.screenGameoverScore);
 		this.screenGameoverGroup.toggleVisible();
     }
-    addPoints() {
-		this._score += 1;
-        this.textScore.setText(EPT.text['gameplay-score']+this._score);
-        var randX = Phaser.Math.Between(200, EPT.world.width-200);
-        var randY = Phaser.Math.Between(200, EPT.world.height-200);
-		var pointsAdded = this.add.text(randX, randY, '+1', { font: '48px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 10 });
-		pointsAdded.setOrigin(0.5, 0.5);
-        this.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
-
-        this.cameras.main.shake(100, 0.01, true);
-    }
-	clickBin(type){
-		if (this.gameItem.type === type){
-			EPT.Sfx.play('trash', this);
-			this.addPoints();
-			this.updateItem();
-		}
-		else {
-			this.endGame();
-		}
-	}
-
-	updateItem(){
-		var randomType = types[Math.floor(Math.random() * types.length)];
-		this.gameItem.type = randomType;
-		var randomItem = null;
-		var keys = null; 
-		var itemDescription = null;
-		switch (randomType){
-			case 'compost':
-				keys = Object.keys(compost_items)
-				randomItem = keys[Math.floor(Math.random() * keys.length)];
-				//make sure we are getting a different next item 
-				while (this.gameItem.image.texture.key === randomItem){
-					randomItem = keys[Math.floor(Math.random() * keys.length)];
-				}
-				itemDescription = compost_items[randomItem];
-				break;
-			case 'trash':
-				keys = Object.keys(trash_items)
-				randomItem = keys[Math.floor(Math.random() * keys.length)];
-				//make sure we are getting a different next item 
-				while (this.gameItem.image.texture.key === randomItem){
-					randomItem = keys[Math.floor(Math.random() * keys.length)];
-				}
-				itemDescription = trash_items[randomItem];
-				break;
-			case 'recycle':
-				keys = Object.keys(recycle_items)
-				randomItem = keys[Math.floor(Math.random() * keys.length)];
-				//make sure we are getting a different next item 
-				while (this.gameItem.image.texture.key === randomItem){
-					randomItem = keys[Math.floor(Math.random() * keys.length)];
-				}
-				itemDescription = recycle_items[randomItem];
-				break;
-		}
-		this.gameItem.image.setTexture(randomItem);
-		this.gameItem.text.setText(itemDescription);
-	}
 
 	stateRestart() {
 		EPT.Sfx.play('click', this);

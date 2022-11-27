@@ -111,6 +111,12 @@ class Game extends Phaser.Scene {
 				if(!this._runOnce) {
 					this.statePaused();
 					this._runOnce = true;
+					//IDK WHY THIS WORKS
+					if (this._stateStatus === 'playing'){
+						this.stateStatus = 'playing';
+						this.matter.world.resume();
+						this._stateStatus = null;
+					}
 				}
 				break;
 			}
@@ -139,7 +145,6 @@ class Game extends Phaser.Scene {
 				self.binCompost.input.enabled = false;
 				self.binTrash.input.enabled = false;
 				self.binRecycle.input.enabled = false;
-				if (self.gameItem.input) self.gameItem.input.enabled = false;
 				self.stateStatus = 'paused';
 				self._runOnce = false;
 			}, this);
@@ -147,6 +152,7 @@ class Game extends Phaser.Scene {
 			this.tweens.add({targets: this.screenPausedBack, x: 100, duration: 500, delay: 250, ease: 'Back'});
 			this.screenPausedContinue.x = GM.world.width+this.screenPausedContinue.width+20;
 			this.tweens.add({targets: this.screenPausedContinue, x: GM.world.width-100, duration: 500, delay: 250, ease: 'Back'});
+			this.matter.world.pause();
 		}
 		else {
 			GM.fadeOutIn(function(self){
@@ -154,7 +160,6 @@ class Game extends Phaser.Scene {
 				self.binCompost.input.enabled = true;
 				self.binTrash.input.enabled = true;
 				self.binRecycle.input.enabled = true;
-				if (self.gameItem.input) self.gameItem.input.enabled = true;
 				self._stateStatus = 'playing';
 				self._runOnce = false;
 			}, this);
@@ -162,6 +167,7 @@ class Game extends Phaser.Scene {
 			this.tweens.add({targets: this.screenPausedBack, x: -this.screenPausedBack.width-20, duration: 500, ease: 'Back'});
 			this.screenPausedContinue.x = GM.world.width-100;
 			this.tweens.add({targets: this.screenPausedContinue, x: GM.world.width+this.screenPausedContinue.width+20, duration: 500, ease: 'Back'});
+			
         }
     }
 
@@ -176,6 +182,7 @@ class Game extends Phaser.Scene {
         this.screenPausedGroup.toggleVisible();
 	}
 	stateGameover() {
+		this.matter.world.pause();
 		GM.leaderboardManager.getScoreDialog(this, this._score);
 		this.currentTimer.paused =! this.currentTimer.paused;
 		GM.Storage.setHighscore('GM-highscore',this._score);

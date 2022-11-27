@@ -200,9 +200,8 @@ class GameItem extends Phaser.Physics.Matter.Image {
 class GameBin extends Phaser.Physics.Matter.Image {
   constructor(type, x, y, scene) {
     var Bodies = Phaser.Physics.Matter.Matter.Bodies;
-    var rect = Bodies.rectangle(0, 0, 150, 100);
     super(scene.matter.world, x, y, type, 0);
-    this.setRectangle(100, 100, {label: 'bin', isStatic: true, isSensor: true });
+    this.setRectangle(160, 40, { label: 'bin', isStatic: true, isSensor: true });
     this.setScale(1, 1);
     
     // this.setExistingBody(this.rect);

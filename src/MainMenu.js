@@ -7,55 +7,55 @@ class MainMenu extends Phaser.Scene {
 
         this.add.sprite(0, 0, 'background').setOrigin(0,0);
 
-		EPT.Storage.initUnset('EPT-highscore', 0);
-		var highscore = EPT.Storage.get('EPT-highscore');
+		GM.Storage.initUnset('GM-highscore', 0);
+		var highscore = GM.Storage.get('GM-highscore');
 
         this.waitingForSettings = false;
 
-        var title = this.add.sprite(EPT.world.centerX, EPT.world.centerY-250, 'bear');
+        var title = this.add.sprite(GM.world.centerX, GM.world.centerY-250, 'logo');
         title.setOrigin(0.5);
 
         this.tweens.add({targets: title, angle: title.angle-2, duration: 1000, ease: 'Sine.easeInOut' });
         this.tweens.add({targets: title, angle: title.angle+4, duration: 2000, ease: 'Sine.easeInOut', yoyo: 1, loop: -1, delay: 1000 });
 
-        this.buttonStart = new Button(EPT.world.width-20, EPT.world.height-20, 'button-start', this.clickStart, this);
+        this.buttonStart = new Button(GM.world.width-20, GM.world.height-20, 'button-start', this.clickStart, this);
         this.buttonStart.setOrigin(1, 1);
 
-        EPT.leaderboardManager.displayTopScores(this);
+        GM.leaderboardManager.displayTopScores(this);
 
         var userScore = 0;
         var userRank = -1;
-        var userName = '';
+        GM.userName = '';
 
-        var fontHighscore = { font: '30px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 5 };
-		var textHighscore = this.add.text(10, 0, EPT.text['menu-highscore']+userScore, fontHighscore);
-        var textRank = this.add.text(10, 0, EPT.text['menu-rank']+userRank, fontHighscore);
-        var textUsername = this.add.text(10, 0, EPT.text['menu-username']+userName, fontHighscore);
+        var fontHighscore = { font: '30px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 5 };
+		var textHighscore = this.add.text(10, 0, GM.text['menu-highscore']+userScore, fontHighscore);
+        var textRank = this.add.text(10, 0, GM.text['menu-rank']+userRank, fontHighscore);
+        var textUsername = this.add.text(10, 0, GM.text['menu-username']+GM.userName, fontHighscore);
 
         this.tweens.add({targets: textHighscore, y: 10, duration: 500, delay: 100, ease: 'Back'});
         this.tweens.add({targets: textRank, y: 40, duration: 500, delay: 100, ease: 'Back'});
         this.tweens.add({targets: textUsername, y: 70, duration: 500, delay: 100, ease: 'Back'});
 
         
-        EPT.leaderBoard.getScore(EPT.Storage.get('userID'))
+        GM.leaderBoard.getScore(GM.Storage.get('userID'))
         .then(function(scoreObj){ 
             userScore = scoreObj.score;
-            textHighscore.setText(EPT.text['menu-highscore']+userScore);
-            userName = scoreObj.userName;
-            textUsername.setText(EPT.text['menu-username']+userName);
+            textHighscore.setText(GM.text['menu-highscore']+userScore);
+            GM.userName = scoreObj.userName;
+            textUsername.setText(GM.text['menu-username']+GM.userName);
         })
         .catch(function(error) { })
         
-        EPT.leaderBoard.getRank(EPT.Storage.get('userID'))
+        GM.leaderBoard.getRank(GM.Storage.get('userID'))
         .then(function(rankObj) {
             userRank = rankObj.rank + 1;
-            textRank.setText(EPT.text['menu-rank']+userRank);
+            textRank.setText(GM.text['menu-rank']+userRank);
         })
         .catch(function(error) { })
 	
 
-		this.buttonStart.x = EPT.world.width+this.buttonStart.width+20;
-        this.tweens.add({targets: this.buttonStart, x: EPT.world.width-20, duration: 500, ease: 'Back'});
+		this.buttonStart.x = GM.world.width+this.buttonStart.width+20;
+        this.tweens.add({targets: this.buttonStart, x: GM.world.width-20, duration: 500, ease: 'Back'});
 
 
         this.cameras.main.fadeIn(250);
@@ -72,11 +72,11 @@ class MainMenu extends Phaser.Scene {
     }
     clickStart() {
         if(this.bgFilesLoaded) {
-            EPT.Sfx.play('click', this);
+            GM.Sfx.play('click', this);
             if(this.loadImage) {
                 this.loadImage.destroy();
             }
-            EPT.fadeOutScene('Story', this);
+            GM.fadeOutScene('Story', this);
         }
         else {
             var animationFrames = this.anims.generateFrameNumbers('loader');
@@ -89,12 +89,12 @@ class MainMenu extends Phaser.Scene {
                 frameRate: 12,
                 repeat: -1
             });
-            this.loadImage = this.add.sprite(EPT.world.width-85, EPT.world.height-85, 'loader').setOrigin(1,1).setScale(1.25);
+            this.loadImage = this.add.sprite(GM.world.width-85, GM.world.height-85, 'loader').setOrigin(1,1).setScale(1.25);
             this.loadImage.play('loading');
         }
     }
     startPreloadInTheBackground() {
-        // console.log('[EPT] Starting background loading...');
+        // console.log('[GM] Starting background loading...');
         this.load.image('img/clickme');
         this.load.image('img/compost');
         this.load.image('img/trash');
@@ -185,11 +185,11 @@ class MainMenu extends Phaser.Scene {
             }, this);
         };
         this.load.on('complete', function(){
-            // console.log('[EPT] All files loaded in the background.');
+            // console.log('[GM] All files loaded in the background.');
             this.bgFilesLoaded = true;
-            EPT.Sfx.init(this);
-            // EPT.Sfx.manage('music', 'init', this);
-            // EPT.Sfx.manage('sound', 'init', this);
+            GM.Sfx.init(this);
+            // GM.Sfx.manage('music', 'init', this);
+            // GM.Sfx.manage('sound', 'init', this);
             if(this.waitingForSettings) {
                 this.clickSettings();
             }

@@ -42,11 +42,11 @@ class Game extends Phaser.Scene {
         this.add.sprite(0, 0, 'background').setOrigin(0,0);
         this.stateStatus = null;
         this._score = 0;
-        this._time = 10;
+        this._time = 1000;
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		EPT.GameManager.updateItem(this);
+		GM.GameManager.updateItem(this);
 
 		this.matter.world.setBounds();
 
@@ -76,14 +76,14 @@ class Game extends Phaser.Scene {
                     itemBody = bodyA;
                 }
 				else { continue; }
-				EPT.GameManager.binCollision(this.scene, binBody.gameObject.type, this.scene.gameItem.type);
+				GM.GameManager.binCollision(this.scene, binBody.gameObject.type, this.scene.gameItem.type);
 			}
 	
 		});
 		
-		this.binCompost = new GameBin('compost', EPT.world.centerX - 210, EPT.world.centerY + 250, this);
-		this.binTrash = new GameBin('trash', EPT.world.centerX-5, EPT.world.centerY + 250, this);
-		this.binRecycle = new GameBin('recycle', EPT.world.centerX + 200, EPT.world.centerY + 250, this);
+		this.binCompost = new GameBin('compost', GM.world.centerX - 210, GM.world.centerY + 250, this);
+		this.binTrash = new GameBin('trash', GM.world.centerX-5, GM.world.centerY + 250, this);
+		this.binRecycle = new GameBin('recycle', GM.world.centerX + 200, GM.world.centerY + 250, this);
 
         
         this.initUI();
@@ -91,7 +91,7 @@ class Game extends Phaser.Scene {
             delay: 1000,
             callback: function(){
                 this._time--;
-                this.textTime.setText(EPT.text['gameplay-timeleft']+this._time);
+                this.textTime.setText(GM.text['gameplay-timeleft']+this._time);
                 if(!this._time) {
                     this._runOnce = false;
                     this.stateStatus = 'gameover';
@@ -132,36 +132,36 @@ class Game extends Phaser.Scene {
     managePause() {
         this._gamePaused =! this._gamePaused;
         this.currentTimer.paused =! this.currentTimer.paused;
-		EPT.Sfx.play('click', this);
+		GM.Sfx.play('click', this);
 		if(this._gamePaused) {
-			EPT.fadeOutIn(function(self){
+			GM.fadeOutIn(function(self){
 				self.buttonPause.input.enabled = false;
 				self.binCompost.input.enabled = false;
 				self.binTrash.input.enabled = false;
 				self.binRecycle.input.enabled = false;
-				self.gameItem.input.enabled = false;
+				if (self.gameItem.input) self.gameItem.input.enabled = false;
 				self.stateStatus = 'paused';
 				self._runOnce = false;
 			}, this);
 			this.screenPausedBack.x = -this.screenPausedBack.width-20;
 			this.tweens.add({targets: this.screenPausedBack, x: 100, duration: 500, delay: 250, ease: 'Back'});
-			this.screenPausedContinue.x = EPT.world.width+this.screenPausedContinue.width+20;
-			this.tweens.add({targets: this.screenPausedContinue, x: EPT.world.width-100, duration: 500, delay: 250, ease: 'Back'});
+			this.screenPausedContinue.x = GM.world.width+this.screenPausedContinue.width+20;
+			this.tweens.add({targets: this.screenPausedContinue, x: GM.world.width-100, duration: 500, delay: 250, ease: 'Back'});
 		}
 		else {
-			EPT.fadeOutIn(function(self){
+			GM.fadeOutIn(function(self){
 				self.buttonPause.input.enabled = true;
 				self.binCompost.input.enabled = true;
 				self.binTrash.input.enabled = true;
 				self.binRecycle.input.enabled = true;
-				self.gameItem.input.enabled = true;
+				if (self.gameItem.input) self.gameItem.input.enabled = true;
 				self._stateStatus = 'playing';
 				self._runOnce = false;
 			}, this);
 			this.screenPausedBack.x = 100;
 			this.tweens.add({targets: this.screenPausedBack, x: -this.screenPausedBack.width-20, duration: 500, ease: 'Back'});
-			this.screenPausedContinue.x = EPT.world.width-100;
-			this.tweens.add({targets: this.screenPausedContinue, x: EPT.world.width+this.screenPausedContinue.width+20, duration: 500, ease: 'Back'});
+			this.screenPausedContinue.x = GM.world.width-100;
+			this.tweens.add({targets: this.screenPausedContinue, x: GM.world.width+this.screenPausedContinue.width+20, duration: 500, ease: 'Back'});
         }
     }
 
@@ -169,17 +169,17 @@ class Game extends Phaser.Scene {
 		this.gameItem.text.x = this.gameItem.x;
 		this.gameItem.text.y = this.gameItem.y - 60;
         if(this._time === 0) {
-            EPT.GameManager.endGame(this);
+            GM.GameManager.endGame(this);
         }
 	}
 	statePaused() {
         this.screenPausedGroup.toggleVisible();
 	}
 	stateGameover() {
-		EPT.leaderboardManager.getScoreDialog(this, this._score);
+		GM.leaderboardManager.getScoreDialog(this, this._score);
 		this.currentTimer.paused =! this.currentTimer.paused;
-		EPT.Storage.setHighscore('EPT-highscore',this._score);
-		EPT.fadeOutIn(function(self){
+		GM.Storage.setHighscore('GM-highscore',this._score);
+		GM.fadeOutIn(function(self){
 			self.screenGameoverGroup.toggleVisible();			
 			self.buttonPause.input.enabled = false;
 			self.binCompost.input.enabled = false;
@@ -187,46 +187,46 @@ class Game extends Phaser.Scene {
 			self.binRecycle.input.enabled = false;
 			self.gameItem.text.destroy();
 			self.gameItem.destroy();
-			self.screenGameoverScore.setText(EPT.text['gameplay-score']+self._score);
+			self.screenGameoverScore.setText(GM.text['gameplay-score']+self._score);
 			self.gameoverScoreTween();
 		}, this);
 		this.screenGameoverBack.x = -this.screenGameoverBack.width-20;
 		this.tweens.add({targets: this.screenGameoverBack, x: 100, duration: 500, delay: 250, ease: 'Back'});
-		this.screenGameoverRestart.x = EPT.world.width+this.screenGameoverRestart.width+20;
-		this.tweens.add({targets: this.screenGameoverRestart, x: EPT.world.width-100, duration: 500, delay: 250, ease: 'Back'});
+		this.screenGameoverRestart.x = GM.world.width+this.screenGameoverRestart.width+20;
+		this.tweens.add({targets: this.screenGameoverRestart, x: GM.world.width-100, duration: 500, delay: 250, ease: 'Back'});
 	}
     initUI() {
 		this.buttonPause = new Button(20, 20, 'button-pause', this.managePause, this);
 		this.buttonPause.setOrigin(0,0);
 
-		var fontScore = { font: '38px '+EPT.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 5 };
-		var fontScoreWhite =  { font: '38px '+EPT.text['FONT'], fill: '#000', stroke: '#D6DE49', strokeThickness: 5 };
-		this.textScore = this.add.text(EPT.world.width-30, 45, EPT.text['gameplay-score']+this._score, fontScore);
+		var fontScore = { font: '38px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 5 };
+		var fontScoreWhite =  { font: '38px '+GM.text['FONT'], fill: '#000', stroke: '#D6DE49', strokeThickness: 5 };
+		this.textScore = this.add.text(GM.world.width-30, 45, GM.text['gameplay-score']+this._score, fontScore);
 		this.textScore.setOrigin(1,0);
 
 		this.textScore.y = -this.textScore.height-20;
 		this.tweens.add({targets: this.textScore, y: 45, duration: 500, delay: 100, ease: 'Back'});
 
-		this.textTime = this.add.text(30, EPT.world.height-30, EPT.text['gameplay-timeleft']+this._time, fontScore);
+		this.textTime = this.add.text(30, GM.world.height-30, GM.text['gameplay-timeleft']+this._time, fontScore);
 		this.textTime.setOrigin(0,1);
 
-		this.textTime.y = EPT.world.height+this.textTime.height+30;
-		this.tweens.add({targets: this.textTime, y: EPT.world.height-30, duration: 500, ease: 'Back'});		
+		this.textTime.y = GM.world.height+this.textTime.height+30;
+		this.tweens.add({targets: this.textTime, y: GM.world.height-30, duration: 500, ease: 'Back'});		
 
 		this.buttonPause.y = -this.buttonPause.height-20;
         this.tweens.add({targets: this.buttonPause, y: 20, duration: 500, ease: 'Back'});
 
-		var fontTitle = { font: '48px '+EPT.text['FONT'], fill: '#000', stroke: '#D6DE49', strokeThickness: 10 };
+		var fontTitle = { font: '48px '+GM.text['FONT'], fill: '#000', stroke: '#D6DE49', strokeThickness: 10 };
 
 		this.screenPausedGroup = this.add.group();
         this.screenPausedBg = this.add.sprite(0, 0, 'overlay');
         this.screenPausedBg.setAlpha(0.95);
         this.screenPausedBg.setOrigin(0, 0);
-		this.screenPausedText = this.add.text(EPT.world.centerX, 100, EPT.text['gameplay-paused'], fontTitle);
+		this.screenPausedText = this.add.text(GM.world.centerX, 100, GM.text['gameplay-paused'], fontTitle);
 		this.screenPausedText.setOrigin(0.5,0);
-		this.screenPausedBack = new Button(100, EPT.world.height-100, 'button-mainmenu', this.stateBack, this);
+		this.screenPausedBack = new Button(100, GM.world.height-100, 'button-mainmenu', this.stateBack, this);
 		this.screenPausedBack.setOrigin(0,1);
-		this.screenPausedContinue = new Button(EPT.world.width-100, EPT.world.height-100, 'button-continue', this.managePause, this);
+		this.screenPausedContinue = new Button(GM.world.width-100, GM.world.height-100, 'button-continue', this.managePause, this);
 		this.screenPausedContinue.setOrigin(1,1);
 		this.screenPausedGroup.add(this.screenPausedBg);
 		this.screenPausedGroup.add(this.screenPausedText);
@@ -238,13 +238,13 @@ class Game extends Phaser.Scene {
         this.screenGameoverBg = this.add.sprite(0, 0, 'overlay');
         this.screenGameoverBg.setAlpha(0.95);
         this.screenGameoverBg.setOrigin(0, 0);
-		this.screenGameoverText = this.add.text(EPT.world.centerX, 100, EPT.text['gameplay-gameover'], fontTitle);
+		this.screenGameoverText = this.add.text(GM.world.centerX, 100, GM.text['gameplay-gameover'], fontTitle);
 		this.screenGameoverText.setOrigin(0.5,0);
-		this.screenGameoverBack = new Button(100, EPT.world.height-100, 'button-mainmenu', this.stateBack, this);
+		this.screenGameoverBack = new Button(100, GM.world.height-100, 'button-mainmenu', this.stateBack, this);
 		this.screenGameoverBack.setOrigin(0,1);
-		this.screenGameoverRestart = new Button(EPT.world.width-100, EPT.world.height-100, 'button-restart', this.stateRestart, this);
+		this.screenGameoverRestart = new Button(GM.world.width-100, GM.world.height-100, 'button-restart', this.stateRestart, this);
 		this.screenGameoverRestart.setOrigin(1,1);
-		this.screenGameoverScore = this.add.text(EPT.world.centerX, 300, EPT.text['gameplay-score']+this._score, fontScoreWhite);
+		this.screenGameoverScore = this.add.text(GM.world.centerX, 300, GM.text['gameplay-score']+this._score, fontScoreWhite);
 		this.screenGameoverScore.setOrigin(0.5,0.5);
 		this.screenGameoverGroup.add(this.screenGameoverBg);
 		this.screenGameoverGroup.add(this.screenGameoverText);
@@ -255,22 +255,22 @@ class Game extends Phaser.Scene {
     }
 
 	stateRestart() {
-		EPT.Sfx.play('click', this);
-        EPT.fadeOutScene('Game', this);
+		GM.Sfx.play('click', this);
+        GM.fadeOutScene('Game', this);
 	}
 	stateBack() {
-		EPT.Sfx.play('click', this);
-		EPT.fadeOutScene('MainMenu', this);
+		GM.Sfx.play('click', this);
+		GM.fadeOutScene('MainMenu', this);
 	}
 
 	gameoverScoreTween() {
-		this.screenGameoverScore.setText(EPT.text['gameplay-score']+'0');
+		this.screenGameoverScore.setText(GM.text['gameplay-score']+'0');
 		if(this._score) {
 			this.pointsTween = this.tweens.addCounter({
 				from: 0, to: this._score, duration: 2000, delay: 250,
 				onUpdateScope: this, onCompleteScope: this,
 				onUpdate: function(){
-					this.screenGameoverScore.setText(EPT.text['gameplay-score']+Math.floor(this.pointsTween.getValue()));
+					this.screenGameoverScore.setText(GM.text['gameplay-score']+Math.floor(this.pointsTween.getValue()));
 				},
 				onComplete: function(){
 					var emitter = this.add.particles('particle').createEmitter({

@@ -3,7 +3,7 @@ class Boot extends Phaser.Scene {
         super('Boot');
     }
     preload() {
-        EPT.Storage.initUnset('userID', uuidv4());
+        GM.Storage.initUnset('userID', uuidv4());
         this.load.image('background', 'img/background.png');
         this.load.image('logo-enclave', 'img/logo-enclave.png');
         this.load.image('loading-background', 'img/loading-background.png');
@@ -11,15 +11,15 @@ class Boot extends Phaser.Scene {
         this.load.plugin('rexfirebaseplugin', 'src/plugins/rexfirebaseplugin.min.js', true);
     }
     create() {
-        EPT.world = {
+        GM.world = {
             width: this.cameras.main.width,
             height: this.cameras.main.height,
             centerX: this.cameras.main.centerX,
             centerY: this.cameras.main.centerY
         };
-        EPT.Lang.updateLanguage('en');
-        EPT.text = EPT.Lang.text[EPT.Lang.current];
-        EPT.leaderboardManager.initLeaderboard(this);
+        GM.Lang.updateLanguage('en');
+        GM.text = GM.Lang.text[GM.Lang.current];
+        GM.leaderboardManager.initLeaderboard(this);
         this.scene.start('Preloader');
     }
 

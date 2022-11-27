@@ -44,7 +44,8 @@ var gameConfig = {
 		matter: {
             debug: true,
             gravity: {
-                y: 0
+                y: 0.05,
+				x: 0
             },
         }
     },

@@ -1,4 +1,4 @@
-var cacheName = 'EPT-v3';
+var cacheName = 'GM-v3';
 var appShellFiles = [
   './',
   './index.html',
@@ -57,14 +57,13 @@ var appShellFiles = [
   './img/trash.png',
   './img/recycle.png',
   './img/compost.png',
-  './img/bear.png',
+  './img/WastedInHalsteadLogo.png',
   './img/loading-background.png',
   './img/logo-enclave.png',
   './img/overlay.png',
   './img/particle.png',
   './img/pattern.png',
   './img/title.png',
-  './img/bear.png',
 
   './img/compost-clamshell.png',
   './img/compost-coffeegrounds.png',

@@ -4,9 +4,9 @@ class Preloader extends Phaser.Scene {
     }
     preload() {
 		this.add.sprite(0, 0, 'background').setOrigin(0, 0);
-        // var logoEnclave = this.add.sprite(EPT.world.centerX, EPT.world.centerY-100, 'logo-enclave');
+        // var logoEnclave = this.add.sprite(GM.world.centerX, GM.world.centerY-100, 'logo-enclave');
         // logoEnclave.setOrigin(0.5, 0.5);
-		var loadingBg = this.add.sprite(EPT.world.centerX, EPT.world.centerY+100, 'loading-background');
+		var loadingBg = this.add.sprite(GM.world.centerX, GM.world.centerY+100, 'loading-background');
 		loadingBg.setOrigin(0.5, 0.5);
 
 		var progress = this.add.graphics();
@@ -19,7 +19,7 @@ class Preloader extends Phaser.Scene {
 		var resources = {
 			'image': [
 				['title', 'img/title.png'],
-				['bear', 'img/bear.png']
+				['logo', 'img/WastedInHalsteadLogo.png']
 			],
 			'spritesheet': [
 				['button-start', 'img/button-start.png', {frameWidth:180,frameHeight:180}],
@@ -35,6 +35,6 @@ class Preloader extends Phaser.Scene {
 		};
     }
     create() {
-		EPT.fadeOutScene('MainMenu', this);
+		GM.fadeOutScene('MainMenu', this);
 	}
 }

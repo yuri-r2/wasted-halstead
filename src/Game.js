@@ -48,7 +48,7 @@ class Game extends Phaser.Scene {
 
 		GM.GameManager.updateItem(this);
 
-		this.matter.world.setBounds();
+		this.matter.world.setBounds(0, 0, GM.world.width, GM.world.height, 4096);
 
 		// this.matter.add.image(400, 100, 'recycle-dasani', null,
 		// { label: 'waste-item', chamfer: 16 })
@@ -65,12 +65,12 @@ class Game extends Phaser.Scene {
 				var bodyB = pairs[i].bodyB;
 				var binBody;
 				var itemBody;
-				if (bodyA.isSensor)
+				if (bodyA.label == 'bin')
                 {
                     binBody = bodyA;
                     itemBody = bodyB;
                 }
-                else if (bodyB.isSensor)
+                else if (bodyB.label == 'bin')
                 {
                     binBody = bodyB;
                     itemBody = bodyA;

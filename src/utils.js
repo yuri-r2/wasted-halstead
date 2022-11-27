@@ -183,8 +183,10 @@ class Button extends Phaser.GameObjects.Image {
 
 class GameItem extends Phaser.Physics.Matter.Image {
   constructor(type, texture, scene) {
-    super(scene.matter.world, GM.world.centerX, GM.world.centerY-270, texture, 0, {scale: (0.1, 0.2), label: 'GameItem', ignoreGravity: false});
+    super(scene.matter.world, GM.world.centerX, GM.world.centerY-270, texture, 0, {circleRadius: 125, frictionAir: 0.15, label: 'GameItem', ignoreGravity: false});
     this.setScale(0.4, 0.4);
+    this.setBounce(0);
+    this.setDensity(0.1);
     this.type = type;
     //Add Text Descrption
     var fontItem = { font: '15px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 4, align: 'center' };
@@ -237,7 +239,6 @@ class GameBin extends Phaser.Physics.Matter.Image {
 
 GM.GameManager = {
   binCollision: function (scene, binType, itemType){
-    console.log(binType, itemType)
     if (itemType === binType){
       
       GM.Sfx.play('trash', scene);

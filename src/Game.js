@@ -109,8 +109,9 @@ class Game extends Phaser.Scene {
                 this._time--;
 				//INCREASE gravity with time
 				this._elapsedTime++;
-				this.matter.world.setGravity(0, this._elapsedTime * 0.01);
-				console.log(this.matter.world.engine.world.gravity)
+				if (this.matter.world.engine.world.gravity < 7){
+					this.matter.world.setGravity(0, this._elapsedTime * 0.02);
+				}
                 this.textTime.setText(GM.text['gameplay-timeleft']+this._time);
                 if(!this._time) {
                     this._runOnce = false;

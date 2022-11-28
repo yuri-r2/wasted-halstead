@@ -190,7 +190,7 @@ class GameItem extends Phaser.Physics.Matter.Image {
     this.setPipeline('Light2D')
     this.type = type;
     //Add Text Descrption
-    var fontItem = { font: '25px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 4, align: 'center' };
+    var fontItem = { font: '30px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 7, align: 'center' };
     this.text = new Phaser.GameObjects.Text(scene, x, y-120, type, fontItem);
     this.text.setOrigin(0.5,0);
     scene.add.existing(this);

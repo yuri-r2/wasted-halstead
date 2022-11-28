@@ -337,7 +337,7 @@ class Game extends Phaser.Scene {
 			this.scene.tweens.add({targets: body.gameObject, scale: 0.7, duration: 250, ease: 'Back'});
 			body.gameObject.text.setVisible(true);
 			body.gameObject.depth = 99; 
-			body.gameObject.text.depth = 99;
+			body.gameObject.text.depth = 100;
 		  }
 	}
 	onDrag(body){

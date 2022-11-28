@@ -54,7 +54,7 @@ class Game extends Phaser.Scene {
 		this.items = []; //list of active waste items 
 		GM.GameManager.spawnRandomItem(this);
 		this.spawnTimer = this.time.addEvent({
-            delay: 2000,
+            delay: 900,
             callback: function(){
                 GM.GameManager.spawnRandomItem(this);
             },
@@ -109,9 +109,10 @@ class Game extends Phaser.Scene {
                 this._time--;
 				//INCREASE gravity with time
 				this._elapsedTime++;
-				if (this.matter.world.engine.world.gravity < 7){
+				if (this.matter.world.engine.world.gravity.y < 7){
 					this.matter.world.setGravity(0, this._elapsedTime * 0.02);
 				}
+				console.log(this.matter.world.engine.world.gravity.y)
                 this.textTime.setText(GM.text['gameplay-timeleft']+this._time);
                 if(!this._time) {
                     this._runOnce = false;

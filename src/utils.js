@@ -183,7 +183,7 @@ class Button extends Phaser.GameObjects.Image {
 
 class GameItem extends Phaser.Physics.Matter.Image {
   constructor(x, y, type, texture, scene) {
-    super(scene.matter.world, x, y, texture, 0, {circleRadius: 125, frictionAir: 0.15, label: 'GameItem', ignoreGravity: false});
+    super(scene.matter.world, x, y, texture, 0, {isSensor: true, circleRadius: 125, frictionAir: 0.15, label: 'GameItem', ignoreGravity: false});
     this.setScale(0.45, 0.45);
     this.setBounce(0);
     this.setDensity(0.1);
@@ -236,7 +236,6 @@ class GameBin extends Phaser.Physics.Matter.Image {
   }
 }
 
-GM.items = []; //list of active waste items 
 GM.GameManager = {
   binCollision: function (scene, binObject, itemObject){
     if (!itemObject) return; //prevent double collision for already removed item
@@ -245,14 +244,14 @@ GM.GameManager = {
       GM.GameManager.addPoints(scene);
       //GM.GameManager.updateItem(scene);
       GM.GameManager.removeItem(scene, itemObject);
-      GM.GameManager.spawnRandomItem(scene);
+      //GM.GameManager.spawnRandomItem(scene);
     }
     else {
       GM.GameManager.endGame(scene);
     }
   },
   endGame: function (scene){
-    GM.GameManager.clearItems();
+    GM.GameManager.clearItems(scene);
     scene._runOnce = false;
     scene.stateStatus = 'gameover';
     GM.Sfx.play('gameover', scene);
@@ -268,20 +267,20 @@ GM.GameManager = {
     scene.cameras.main.shake(100, 0.01, true);
   },
   removeItem: function(scene, itemToRemove){
-    for (var i = 0; i < GM.items.length; i++){
-      if (GM.items[i] == itemToRemove){
-        GM.items[i].text.destroy();
-        GM.items[i].destroy();
-        GM.items.splice(i, 1); 
+    for (var i = 0; i < scene.items.length; i++){
+      if (scene.items[i] == itemToRemove){
+        scene.items[i].text.destroy();
+        scene.items[i].destroy();
+        scene.items.splice(i, 1); 
       }
     }
   },
-  clearItems: function(){
-    for (var item of GM.items){
+  clearItems: function(scene){
+    for (var item of scene.items){
       item.text.destroy();
       item.destroy();
     }
-    GM.items = [];
+    scene.items = [];
   },
   spawnRandomItem: function(scene){
 		var randomType = types[Math.floor(Math.random() * types.length)];
@@ -309,7 +308,7 @@ GM.GameManager = {
     const y = scene.spawnArea.getRandomPoint().y
     var newItem = new GameItem(x, y, randomType, randomItem, scene);
     newItem.text.setText(itemDescription);
-    GM.items.push(newItem);
+    scene.items.push(newItem);
 	},
 }
 

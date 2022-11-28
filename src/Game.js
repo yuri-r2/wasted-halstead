@@ -43,21 +43,37 @@ class Game extends Phaser.Scene {
         this.stateStatus = null;
         this._score = 0;
         this._time = 1000;
+		this._elapsedTime = 0;
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		// var graphics = this.add.graphics({ lineStyle: { width: 4, color: 0x0000ff }, fillStyle: { color: 0xff0000 }});
-		this.spawnArea = new Phaser.Geom.Rectangle(60, 110, GM.world.width-120 , 200);
-		// graphics.strokeRectShape(this.spawnArea);
+		var graphics = this.add.graphics({ lineStyle: { width: 4, color: 0x0000ff }, fillStyle: { color: 0xff0000 }});
+		this.spawnArea = new Phaser.Geom.Rectangle(60, 110, GM.world.width-120 , 150);
+		graphics.strokeRectShape(this.spawnArea);
+		
+		this.items = []; //list of active waste items 
+		GM.GameManager.spawnRandomItem(this);
+		this.spawnTimer = this.time.addEvent({
+            delay: 2000,
+            callback: function(){
+                GM.GameManager.spawnRandomItem(this);
+            },
+            callbackScope: this,
+            loop: true
+        });
+
+		
 
 		//GM.GameManager.updateItem(this);
-		GM.GameManager.spawnRandomItem(this);
+		
 
 		this.matter.world.setBounds(0, 0, GM.world.width, GM.world.height, 4096);
+
 
 		this.matter.add.mouseSpring({ length: 1, stiffness: 0.6 });
 
 		this.matter.world.on('collisionstart', function (event) {
+			console.log(event);
 			var pairs = event.pairs;
 
 			for (var i = 0; i < pairs.length; i++){
@@ -91,6 +107,10 @@ class Game extends Phaser.Scene {
             delay: 1000,
             callback: function(){
                 this._time--;
+				//INCREASE gravity with time
+				this._elapsedTime++;
+				this.matter.world.setGravity(0, this._elapsedTime * 0.01);
+				console.log(this.matter.world.engine.world.gravity)
                 this.textTime.setText(GM.text['gameplay-timeleft']+this._time);
                 if(!this._time) {
                     this._runOnce = false;
@@ -138,6 +158,7 @@ class Game extends Phaser.Scene {
     managePause() {
         this._gamePaused =! this._gamePaused;
         this.currentTimer.paused =! this.currentTimer.paused;
+		this.spawnTimer.paused =! this.spawnTimer.paused;
 		GM.Sfx.play('click', this);
 		if(this._gamePaused) {
 			GM.fadeOutIn(function(self){
@@ -172,7 +193,7 @@ class Game extends Phaser.Scene {
     }
 
 	statePlaying() {
-		for (var item of GM.items){
+		for (var item of this.items){
 			item.text.x = item.x;
 			item.text.y = item.y - 60;
 		}
@@ -186,9 +207,10 @@ class Game extends Phaser.Scene {
 	}
 	stateGameover() {
 		this.matter.world.pause();
-		GM.GameManager.clearItems();
+		GM.GameManager.clearItems(this);
 		GM.leaderboardManager.getScoreDialog(this, this._score);
 		this.currentTimer.paused =! this.currentTimer.paused;
+		this.spawnTimer.paused =! this.spawnTimer.paused;
 		GM.Storage.setHighscore('GM-highscore',this._score);
 		GM.fadeOutIn(function(self){
 			self.screenGameoverGroup.toggleVisible();			
@@ -268,7 +290,7 @@ class Game extends Phaser.Scene {
         GM.fadeOutScene('Game', this);
 	}
 	stateBack() {
-		GM.GameManager.clearItems();
+		GM.GameManager.clearItems(this);
 		GM.Sfx.play('click', this);
 		GM.fadeOutScene('MainMenu', this);
 	}

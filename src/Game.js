@@ -38,8 +38,7 @@ class Game extends Phaser.Scene {
 	}
     create() {
 		
-
-        this.add.sprite(0, 0, 'background').setOrigin(0,0);
+        this.add.sprite(0, 0, 'background').setOrigin(0,0).setPipeline('Light2D');
         this.stateStatus = null;
         this._score = 0;
         this._time = 1000;
@@ -50,6 +49,13 @@ class Game extends Phaser.Scene {
 		var graphics = this.add.graphics({ lineStyle: { width: 4, color: 0x0000ff }, fillStyle: { color: 0xff0000 }});
 		this.spawnArea = new Phaser.Geom.Rectangle(60, 110, GM.world.width-120 , 150);
 		graphics.strokeRectShape(this.spawnArea);
+
+		this.lights.enable().setAmbientColor(0xBBBBBB);
+		GM.light = this.lights.addLight(0, 0, 300).setColor(0xffffff).setIntensity(1);
+		// this.input.on('pointermove', function (pointer) {
+		// 	GM.light.x = pointer.x;
+		// 	GM.light.y = pointer.y;
+		// });
 		
 		this.items = []; //list of active waste items 
 		GM.GameManager.spawnRandomItem(this);
@@ -61,8 +67,11 @@ class Game extends Phaser.Scene {
             callbackScope: this,
             loop: true
         });
-
 		
+		this.matter.world.on('dragstart', this.onDragStart);
+		this.matter.world.on('drag', this.onDrag);
+		this.matter.world.on('dragend', this.onDragEnd);
+
 
 		//GM.GameManager.updateItem(this);
 		
@@ -73,7 +82,7 @@ class Game extends Phaser.Scene {
 		this.matter.add.mouseSpring({ length: 1, stiffness: 0.6 });
 
 		this.matter.world.on('collisionstart', function (event) {
-			console.log(event);
+			// console.log(event);
 			var pairs = event.pairs;
 
 			for (var i = 0; i < pairs.length; i++){
@@ -112,7 +121,7 @@ class Game extends Phaser.Scene {
 				if (this.matter.world.engine.world.gravity.y < 7){
 					this.matter.world.setGravity(0, this._elapsedTime * 0.02);
 				}
-				console.log(this.matter.world.engine.world.gravity.y)
+				// console.log(this.matter.world.engine.world.gravity.y)
                 this.textTime.setText(GM.text['gameplay-timeleft']+this._time);
                 if(!this._time) {
                     this._runOnce = false;
@@ -195,10 +204,10 @@ class Game extends Phaser.Scene {
     }
 
 	statePlaying() {
-		for (var item of this.items){
-			item.text.x = item.x;
-			item.text.y = item.y - 60;
-		}
+		// for (var item of this.items){
+		// 	item.text.x = item.x;
+		// 	item.text.y = item.y - 120;
+		// }
 		
         if(this._time === 0) {
             GM.GameManager.endGame(this);
@@ -296,7 +305,6 @@ class Game extends Phaser.Scene {
 		GM.Sfx.play('click', this);
 		GM.fadeOutScene('MainMenu', this);
 	}
-
 	gameoverScoreTween() {
 		this.screenGameoverScore.setText(GM.text['gameplay-score']+'0');
 		if(this._score) {
@@ -322,6 +330,34 @@ class Game extends Phaser.Scene {
 					emitter.explode();
 				}
 			});
+		}
+	}
+	onDragStart(body){
+		if(body.gameObject){
+			this.scene.tweens.add({targets: body.gameObject, scale: 0.7, duration: 250, ease: 'Back'});
+			body.gameObject.text.setVisible(true);
+			body.gameObject.depth = 99; 
+			body.gameObject.text.depth = 99;
+		  }
+	}
+	onDrag(body){
+		if(body.gameObject){
+		  body.gameObject.text.x =  body.gameObject.x;
+		  body.gameObject.text.y =  body.gameObject.y - 120;
+		  GM.light.x = body.gameObject.x;
+		  GM.light.y = body.gameObject.y;
+		}
+	  }
+	onDragEnd(body){
+		GM.light.x = 0;
+		GM.light.y = 0;
+		if (body.gameObject){
+		  this.scene.tweens.add({targets: body.gameObject, scale: 0.45, duration: 250, ease: 'Back'});
+		  body.gameObject.text.setVisible(false);
+		  // body.gameObject._scaleX = 0.45;
+		  // body.gameObject._scaleY = 0.45;
+		  body.gameObject.depth = 0;
+		  body.gameObject.text.depth = 0;
 		}
 	}
 };

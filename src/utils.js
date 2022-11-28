@@ -187,13 +187,17 @@ class GameItem extends Phaser.Physics.Matter.Image {
     this.setScale(0.45, 0.45);
     this.setBounce(0);
     this.setDensity(0.1);
+    this.setPipeline('Light2D')
     this.type = type;
     //Add Text Descrption
-    var fontItem = { font: '17px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 4, align: 'center' };
-    this.text = new Phaser.GameObjects.Text(scene, x, y-60, type, fontItem);
+    var fontItem = { font: '25px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 4, align: 'center' };
+    this.text = new Phaser.GameObjects.Text(scene, x, y-120, type, fontItem);
     this.text.setOrigin(0.5,0);
     scene.add.existing(this);
     scene.add.existing(this.text);
+    // console.log(this.text);
+    this.text.setVisible(false);
+    // this._scaleX = 1;
   }
 }
 
@@ -203,7 +207,7 @@ class GameBin extends Phaser.Physics.Matter.Image {
     super(scene.matter.world, x, y, type, 0);
     this.setRectangle(160, 40, { label: 'bin', isStatic: true, isSensor: true });
     this.setScale(1, 1);
-    
+    this.setPipeline('Light2D');
     // this.setExistingBody(this.rect);
     this.type = type;
     this.setInteractive({ useHandCursor: true });
@@ -227,12 +231,11 @@ class GameBin extends Phaser.Physics.Matter.Image {
     this.setAlpha(0);
 
     
-
     scene.add.existing(this);
     scene.tweens.add({targets: this, alpha: 1, duration: 500, ease: 'Linear'});
-    // scene.tweens.add({targets: this, scale: 1, duration: 500, ease: 'Back'});
 
-    
+    scene.items.push(this);
+    this.depth = 0;
   }
 }
 
@@ -308,7 +311,6 @@ GM.GameManager = {
     const y = scene.spawnArea.getRandomPoint().y
     var newItem = new GameItem(x, y, randomType, randomItem, scene);
     newItem.text.setText(itemDescription);
-    scene.items.push(newItem);
 	},
 }
 

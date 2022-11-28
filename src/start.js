@@ -42,7 +42,7 @@ var gameConfig = {
 	physics: {
         default: 'matter',
 		matter: {
-            debug: true,
+            debug: false,
             gravity: {
                 y: 0.01,
 				x: 0

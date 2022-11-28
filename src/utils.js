@@ -198,6 +198,7 @@ class GameItem extends Phaser.Physics.Matter.Image {
     // console.log(this.text);
     this.text.setVisible(false);
     // this._scaleX = 1;
+    scene.items.push(this);
   }
 }
 
@@ -234,7 +235,7 @@ class GameBin extends Phaser.Physics.Matter.Image {
     scene.add.existing(this);
     scene.tweens.add({targets: this, alpha: 1, duration: 500, ease: 'Linear'});
 
-    scene.items.push(this);
+    
     this.depth = 0;
   }
 }
@@ -272,6 +273,7 @@ GM.GameManager = {
   removeItem: function(scene, itemToRemove){
     for (var i = 0; i < scene.items.length; i++){
       if (scene.items[i] == itemToRemove){
+        
         scene.items[i].text.destroy();
         scene.items[i].destroy();
         scene.items.splice(i, 1); 

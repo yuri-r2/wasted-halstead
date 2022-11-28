@@ -268,6 +268,7 @@ class Game extends Phaser.Scene {
         GM.fadeOutScene('Game', this);
 	}
 	stateBack() {
+		GM.GameManager.clearItems();
 		GM.Sfx.play('click', this);
 		GM.fadeOutScene('MainMenu', this);
 	}

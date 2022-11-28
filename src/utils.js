@@ -252,6 +252,7 @@ GM.GameManager = {
     }
   },
   endGame: function (scene){
+    GM.GameManager.clearItems();
     scene._runOnce = false;
     scene.stateStatus = 'gameover';
     GM.Sfx.play('gameover', scene);

@@ -46,14 +46,14 @@ class Game extends Phaser.Scene {
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		GM.GameManager.updateItem(this);
+		// var graphics = this.add.graphics({ lineStyle: { width: 4, color: 0x0000ff }, fillStyle: { color: 0xff0000 }});
+		this.spawnArea = new Phaser.Geom.Rectangle(60, 110, GM.world.width-120 , 200);
+		// graphics.strokeRectShape(this.spawnArea);
+
+		//GM.GameManager.updateItem(this);
+		GM.GameManager.spawnRandomItem(this);
 
 		this.matter.world.setBounds(0, 0, GM.world.width, GM.world.height, 4096);
-
-		// this.matter.add.image(400, 100, 'recycle-dasani', null,
-		// { label: 'waste-item', chamfer: 16 })
-		// .setBounce(0.9)
-		// .setIgnoreGravity(true);;
 
 		this.matter.add.mouseSpring({ length: 1, stiffness: 0.6 });
 
@@ -76,7 +76,7 @@ class Game extends Phaser.Scene {
                     itemBody = bodyA;
                 }
 				else { continue; }
-				GM.GameManager.binCollision(this.scene, binBody.gameObject.type, this.scene.gameItem.type);
+				GM.GameManager.binCollision(this.scene, binBody.gameObject, itemBody.gameObject);
 			}
 	
 		});
@@ -172,8 +172,11 @@ class Game extends Phaser.Scene {
     }
 
 	statePlaying() {
-		this.gameItem.text.x = this.gameItem.x;
-		this.gameItem.text.y = this.gameItem.y - 60;
+		for (var item of GM.items){
+			item.text.x = item.x;
+			item.text.y = item.y - 60;
+		}
+		
         if(this._time === 0) {
             GM.GameManager.endGame(this);
         }
@@ -183,6 +186,7 @@ class Game extends Phaser.Scene {
 	}
 	stateGameover() {
 		this.matter.world.pause();
+		GM.GameManager.clearItems();
 		GM.leaderboardManager.getScoreDialog(this, this._score);
 		this.currentTimer.paused =! this.currentTimer.paused;
 		GM.Storage.setHighscore('GM-highscore',this._score);
@@ -192,8 +196,6 @@ class Game extends Phaser.Scene {
 			self.binCompost.input.enabled = false;
 			self.binTrash.input.enabled = false;
 			self.binRecycle.input.enabled = false;
-			self.gameItem.text.destroy();
-			self.gameItem.destroy();
 			self.screenGameoverScore.setText(GM.text['gameplay-score']+self._score);
 			self.gameoverScoreTween();
 		}, this);

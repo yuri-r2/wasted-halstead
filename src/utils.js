@@ -182,15 +182,15 @@ class Button extends Phaser.GameObjects.Image {
 };
 
 class GameItem extends Phaser.Physics.Matter.Image {
-  constructor(type, texture, scene) {
-    super(scene.matter.world, GM.world.centerX, GM.world.centerY-270, texture, 0, {circleRadius: 125, frictionAir: 0.15, label: 'GameItem', ignoreGravity: false});
-    this.setScale(0.4, 0.4);
+  constructor(x, y, type, texture, scene) {
+    super(scene.matter.world, x, y, texture, 0, {circleRadius: 125, frictionAir: 0.15, label: 'GameItem', ignoreGravity: false});
+    this.setScale(0.45, 0.45);
     this.setBounce(0);
     this.setDensity(0.1);
     this.type = type;
     //Add Text Descrption
-    var fontItem = { font: '15px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 4, align: 'center' };
-    this.text = new Phaser.GameObjects.Text(scene, GM.world.centerX, GM.world.centerY-100, type, fontItem);
+    var fontItem = { font: '17px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 4, align: 'center' };
+    this.text = new Phaser.GameObjects.Text(scene, x, y-60, type, fontItem);
     this.text.setOrigin(0.5,0);
     scene.add.existing(this);
     scene.add.existing(this.text);
@@ -236,13 +236,16 @@ class GameBin extends Phaser.Physics.Matter.Image {
   }
 }
 
+GM.items = []; //list of active waste items 
 GM.GameManager = {
-  binCollision: function (scene, binType, itemType){
-    if (itemType === binType){
-      
+  binCollision: function (scene, binObject, itemObject){
+    if (!itemObject) return; //prevent double collision for already removed item
+    if (itemObject.type === binObject.type){
       GM.Sfx.play('trash', scene);
       GM.GameManager.addPoints(scene);
-      GM.GameManager.updateItem(scene);
+      //GM.GameManager.updateItem(scene);
+      GM.GameManager.removeItem(scene, itemObject);
+      GM.GameManager.spawnRandomItem(scene);
     }
     else {
       GM.GameManager.endGame(scene);
@@ -255,7 +258,6 @@ GM.GameManager = {
   },
   addPoints: function(scene) {
 		scene._score += 1;
-    
     scene.textScore.setText(GM.text['gameplay-score']+scene._score);
     var randX = Phaser.Math.Between(200, GM.world.width-200);
     var randY = Phaser.Math.Between(200, GM.world.height-200);
@@ -264,53 +266,50 @@ GM.GameManager = {
     scene.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
     scene.cameras.main.shake(100, 0.01, true);
   },
-  updateItem: function(scene){
+  removeItem: function(scene, itemToRemove){
+    for (var i = 0; i < GM.items.length; i++){
+      if (GM.items[i] == itemToRemove){
+        GM.items[i].text.destroy();
+        GM.items[i].destroy();
+        GM.items.splice(i, 1); 
+      }
+    }
+  },
+  clearItems: function(){
+    for (var item of GM.items){
+      item.text.destroy();
+      item.destroy();
+    }
+    GM.items = [];
+  },
+  spawnRandomItem: function(scene){
 		var randomType = types[Math.floor(Math.random() * types.length)];
-		// scene.gameItem.type = randomType;
 		var randomItem = null;
 		var keys = null; 
 		var itemDescription = null;
 		switch (randomType){
 			case 'compost':
 				keys = Object.keys(compost_items)
-				randomItem = keys[Math.floor(Math.random() * keys.length)];
-				//make sure we are getting a different next item 
-				while (scene.gameItem && scene.gameItem.texture.key === randomItem){
-					randomItem = keys[Math.floor(Math.random() * keys.length)];
-				}
+				randomItem = keys[Math.floor(Math.random() * keys.length)];				
 				itemDescription = compost_items[randomItem];
 				break;
 			case 'trash':
 				keys = Object.keys(trash_items)
 				randomItem = keys[Math.floor(Math.random() * keys.length)];
-				//make sure we are getting a different next item 
-				while (scene.gameItem && scene.gameItem.texture.key === randomItem){
-					randomItem = keys[Math.floor(Math.random() * keys.length)];
-				}
 				itemDescription = trash_items[randomItem];
 				break;
 			case 'recycle':
 				keys = Object.keys(recycle_items)
 				randomItem = keys[Math.floor(Math.random() * keys.length)];
-				//make sure we are getting a different next item 
-				while (scene.gameItem && scene.gameItem.texture.key === randomItem){
-					randomItem = keys[Math.floor(Math.random() * keys.length)];
-				}
 				itemDescription = recycle_items[randomItem];
 				break;
 		}
-		// scene.gameItem.setTexture(randomItem);
-		// scene.gameItem.text.setText(itemDescription);
-    // scene.gameItem.setX(300);
-    // scene.gameItem.setY(300);
-    if (scene.gameItem){
-      scene.gameItem.text.destroy();
-      scene.gameItem.destroy();
-    }
-    scene.gameItem = new GameItem(randomType, randomItem, scene); 
-    scene.gameItem.text.setText(itemDescription);
-    
-	}
+    const x = scene.spawnArea.getRandomPoint().x
+    const y = scene.spawnArea.getRandomPoint().y
+    var newItem = new GameItem(x, y, randomType, randomItem, scene);
+    newItem.text.setText(itemDescription);
+    GM.items.push(newItem);
+	},
 }
 
 GM.Storage = {

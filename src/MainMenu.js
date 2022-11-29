@@ -94,7 +94,6 @@ class MainMenu extends Phaser.Scene {
     }
     startPreloadInTheBackground() {
         // console.log('[GM] Starting background loading...');
-        this.load.image('img/clickme');
         this.load.image('img/compost');
         this.load.image('img/trash');
         this.load.image('img/recycle');
@@ -127,10 +126,7 @@ class MainMenu extends Phaser.Scene {
     addFiles() {
         var resources = {
             'image': [
-                ['clickme', 'img/clickme.png'],
                 ['overlay', 'img/overlay.png'],
-                ['button-beer', 'img/button-beer.png'],
-                ['banner-beer', 'img/banner-beer.png'],
                 ['particle', 'img/particle.png'],
 
                 ['compost-clamshell', 'img/compost-clamshell.png'],
@@ -161,13 +157,7 @@ class MainMenu extends Phaser.Scene {
                 ['button-continue', 'img/button-start.png', {frameWidth:180,frameHeight:180}],
                 ['button-mainmenu', 'img/button-mainmenu.png', {frameWidth:180,frameHeight:180}],
                 ['button-restart', 'img/button-tryagain.png', {frameWidth:180,frameHeight:180}],
-                ['button-achievements', 'img/button-achievements.png', {frameWidth:110,frameHeight:110}],
                 ['button-pause', 'img/button-pause.png', {frameWidth:80,frameHeight:80}],
-                ['button-credits', 'img/button-credits.png', {frameWidth:80,frameHeight:80}],
-                ['button-sound-on', 'img/button-sound-on.png', {frameWidth:80,frameHeight:80}],
-                ['button-sound-off', 'img/button-sound-off.png', {frameWidth:80,frameHeight:80}],
-                ['button-music-on', 'img/button-music-on.png', {frameWidth:80,frameHeight:80}],
-                ['button-music-off', 'img/button-music-off.png', {frameWidth:80,frameHeight:80}],
                 ['button-back', 'img/button-back.png', {frameWidth:70,frameHeight:70}]
             ],
             'audio': [

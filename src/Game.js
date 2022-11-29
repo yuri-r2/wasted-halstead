@@ -1,28 +1,3 @@
-const types = ["trash", "recycle", "compost"];
-const trash_items = {
-	'trash-bluebell': "Empty can of Blue Bell icecream",
-	'trash-bubblewrap': "Bubble wrap",
-	'trash-chewinggum': "Well-chewed chewing gum",
-	'trash-ketchup': "Ketchup packet",
-	'trash-milkcarton': "Empty carton of milk",
-	'trash-plasticbag': "Plastic grocery bag"
-}
-const recycle_items = { 
-	'recycle-spaghettios': "Cleaned out can of SpaghettiOs",
-	'recycle-aluminium': "Aluminium foil",
-	'recycle-cakecontainer': "Cleaned out cake container",
-	'recycle-cardboard': "Broken down cardboard box",
-	'recycle-cheerios': "Empty box of Cheerios",
-	'recycle-dasani': "Empty Dasani bottle"
-}
-const compost_items = {
-	'compost-clamshell': "Clamshell made of sugar cane fibers",
-	'compost-coffeegrounds': "Used coffee grounds",
-	'compost-dylans': "Dylan's pizza",
-	'compost-eggshells': "Egg shells",
-	'compost-papertowel': "Paper towels",
-	'compost-parchment': "Parchment paper"
-}
 class Game extends Phaser.Scene {
     constructor() {
         super('Game');
@@ -41,7 +16,6 @@ class Game extends Phaser.Scene {
         this.add.sprite(0, 0, 'background').setOrigin(0,0).setPipeline('Light2D');
         this.stateStatus = null;
         this._score = 0;
-        this._time = 1000;
 		this._elapsedTime = 0;
 		this._gamePaused = false;
 		this._runOnce = false;
@@ -52,10 +26,6 @@ class Game extends Phaser.Scene {
 
 		this.lights.enable().setAmbientColor(0xBBBBBB);
 		GM.light = this.lights.addLight(0, 0, 300).setColor(0xffffff).setIntensity(1);
-		// this.input.on('pointermove', function (pointer) {
-		// 	GM.light.x = pointer.x;
-		// 	GM.light.y = pointer.y;
-		// });
 		
 		this.items = []; //list of active waste items 
 		GM.GameManager.spawnRandomItem(this);
@@ -74,14 +44,38 @@ class Game extends Phaser.Scene {
 		this.matter.world.on('drag', this.onDrag);
 		this.matter.world.on('dragend', this.onDragEnd);
 
-
-		//GM.GameManager.updateItem(this);
 		
-
-		this.matter.world.setBounds(0, 0, GM.world.width, GM.world.height, 4096);
+		//Bounds are slightly offset to prevent accidental collisions with borders
+		this.matter.world.setBounds(-60, -60, GM.world.width+120, GM.world.height+120, 4096);
 
 
 		this.matter.add.mouseSpring({ length: 1, stiffness: 0.6 });
+
+		
+		this.binCompost = new GameBin('compost', GM.world.centerX - 210, GM.world.centerY + 320, this);
+		this.binTrash = new GameBin('trash', GM.world.centerX-5, GM.world.centerY + 320, this);
+		this.binRecycle = new GameBin('recycle', GM.world.centerX + 200, GM.world.centerY + 320, this);
+
+        
+        this.initUI();
+        this.currentTimer = this.time.addEvent({
+            delay: 1000,
+            callback: function(){
+				//INCREASE gravity with time
+				this._elapsedTime++;
+				if (this.matter.world.engine.world.gravity.y < 6){
+					this.matter.world.setGravity(0, this._elapsedTime * 0.04);
+				}
+				// console.log(this.matter.world.engine.world.gravity.y)
+                //this.textTime.setText(GM.text['gameplay-timeleft']+this._time);
+                // if(!this._time) {
+                //     this._runOnce = false;
+                //     this.stateStatus = 'gameover';
+                // }
+            },
+            callbackScope: this,
+            loop: true
+        });
 
 		this.matter.world.on('collisionstart', function (event) {
 			var pairs = event.pairs;
@@ -128,39 +122,12 @@ class Game extends Phaser.Scene {
 				}
 
 				if (isWorldCollision){
-					GM.GameManager.removeItem(this.scene, itemBody.gameObject)
+					GM.GameManager.borderCollision(this.scene, itemBody.gameObject)
 				}
 			}
 	
 		});
-		
-		this.binCompost = new GameBin('compost', GM.world.centerX - 210, GM.world.centerY + 250, this);
-		this.binTrash = new GameBin('trash', GM.world.centerX-5, GM.world.centerY + 250, this);
-		this.binRecycle = new GameBin('recycle', GM.world.centerX + 200, GM.world.centerY + 250, this);
 
-        
-        this.initUI();
-        this.currentTimer = this.time.addEvent({
-            delay: 1000,
-            callback: function(){
-                this._time--;
-				//INCREASE gravity with time
-				this._elapsedTime++;
-				if (this.matter.world.engine.world.gravity.y < 6){
-					this.matter.world.setGravity(0, this._elapsedTime * 0.04);
-				}
-				// console.log(this.matter.world.engine.world.gravity.y)
-                this.textTime.setText(GM.text['gameplay-timeleft']+this._time);
-                if(!this._time) {
-                    this._runOnce = false;
-                    this.stateStatus = 'gameover';
-                }
-            },
-            callbackScope: this,
-            loop: true
-        });
-
-		//this.input.keyboard.on('keydown', this.handleKey, this);
         this.cameras.main.fadeIn(250);
         this.stateStatus = 'playing';
     }
@@ -231,12 +198,7 @@ class Game extends Phaser.Scene {
         }
     }
 
-	statePlaying() {
-		// for (var item of this.items){
-		// 	item.text.x = item.x;
-		// 	item.text.y = item.y - 120;
-		// }
-		
+	statePlaying() {		
         if(this._time === 0) {
             GM.GameManager.endGame(this);
         }
@@ -275,13 +237,7 @@ class Game extends Phaser.Scene {
 		this.textScore.setOrigin(1,0);
 
 		this.textScore.y = -this.textScore.height-20;
-		this.tweens.add({targets: this.textScore, y: 45, duration: 500, delay: 100, ease: 'Back'});
-
-		this.textTime = this.add.text(30, GM.world.height-30, GM.text['gameplay-timeleft']+this._time, fontScore);
-		this.textTime.setOrigin(0,1);
-
-		this.textTime.y = GM.world.height+this.textTime.height+30;
-		this.tweens.add({targets: this.textTime, y: GM.world.height-30, duration: 500, ease: 'Back'});		
+		this.tweens.add({targets: this.textScore, y: 45, duration: 500, delay: 100, ease: 'Back'});	
 
 		this.buttonPause.y = -this.buttonPause.height-20;
         this.tweens.add({targets: this.buttonPause, y: 20, duration: 500, ease: 'Back'});

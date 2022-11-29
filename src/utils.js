@@ -4,6 +4,31 @@ const COLOR_PRIMARY = 0xC0C741;
 const COLOR_SECONDARY = 0xE4943A;
 const COLOR_LIGHT = 0xC0C741;
 const COLOR_DARK = 0x1F0E1C;
+
+const types = ["trash", "recycle", "compost"];
+const itemDescriptions ={ 
+'trash-bluebell': "Empty can of Blue Bell icecream",
+'trash-bubblewrap': "Bubble wrap",
+'trash-chewinggum': "Well-chewed chewing gum",
+'trash-ketchup': "Ketchup packet",
+'trash-milkcarton': "Empty carton of milk",
+'trash-plasticbag': "Plastic grocery bag",
+
+'recycle-spaghettios': "Cleaned out can of SpaghettiOs",
+'recycle-aluminium': "Aluminium foil",
+'recycle-cakecontainer': "Cleaned out cake container",
+'recycle-cardboard': "Broken down cardboard box",
+'recycle-cheerios': "Empty box of Cheerios",
+'recycle-dasani': "Empty Dasani bottle",
+
+'compost-clamshell': "Clamshell made of sugar cane fibers",
+'compost-coffeegrounds': "Used coffee grounds",
+'compost-dylans': "Dylan's pizza",
+'compost-eggshells': "Egg shells",
+'compost-papertowel': "Paper towels",
+'compost-parchment': "Parchment paper"
+}
+
 var GM = {};
 GM.Sfx = {
   init: function (game) {
@@ -260,9 +285,17 @@ GM.GameManager = {
     scene.stateStatus = 'gameover';
     GM.Sfx.play('gameover', scene);
   },
+  borderCollision: function(scene, itemObject){
+    if (!itemObject) return; //prevent double collision for already removed item
+    GM.GameManager.removeItem(scene, itemObject);
+    const text = "Discarded " + itemDescriptions[itemObject.texture.key];
+    var itemDiscardedText = scene.add.text(GM.world.centerX, 100, text, { font: '25px '+GM.text['FONT'], fill: '#E4943A', stroke: '#000', strokeThickness: 4 });
+		itemDiscardedText.setOrigin(0.5, 0.5);
+    scene.tweens.add({targets: itemDiscardedText, alpha: 0, y: 50, duration: 4000, ease: 'Linear'});
+    scene.cameras.main.shake(100, 0.01, true);
+  },
   addPoints: function(scene) {
 		scene._score += 1;
-    scene.textScore.setText(GM.text['gameplay-score']+scene._score);
     var randX = Phaser.Math.Between(200, GM.world.width-200);
     var randY = Phaser.Math.Between(200, GM.world.height-200);
 		var pointsAdded = scene.add.text(randX, randY, '+1', { font: '48px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 10 });
@@ -273,7 +306,7 @@ GM.GameManager = {
   removeItem: function(scene, itemToRemove){
     for (var i = 0; i < scene.items.length; i++){
       if (scene.items[i] == itemToRemove){
-        console.log("removing" + itemToRemove);
+        console.log(itemToRemove);
         scene.items[i].text.destroy();
         scene.items[i].destroy();
         scene.items.splice(i, 1); 
@@ -289,30 +322,14 @@ GM.GameManager = {
   },
   spawnRandomItem: function(scene){
     if (scene.items.length >= 10) return; //MAX 10 items
-		var randomType = types[Math.floor(Math.random() * types.length)];
-		var randomItem = null;
-		var keys = null; 
-		var itemDescription = null;
-		switch (randomType){
-			case 'compost':
-				keys = Object.keys(compost_items)
-				randomItem = keys[Math.floor(Math.random() * keys.length)];				
-				itemDescription = compost_items[randomItem];
-				break;
-			case 'trash':
-				keys = Object.keys(trash_items)
-				randomItem = keys[Math.floor(Math.random() * keys.length)];
-				itemDescription = trash_items[randomItem];
-				break;
-			case 'recycle':
-				keys = Object.keys(recycle_items)
-				randomItem = keys[Math.floor(Math.random() * keys.length)];
-				itemDescription = recycle_items[randomItem];
-				break;
-		}
+	
+    const keys = Object.keys(itemDescriptions)
+		const randomItem = keys[Math.floor(Math.random() * keys.length)];
+    const itemDescription = itemDescriptions[randomItem];
+    const itemType = randomItem.split('-')[0];
     const x = scene.spawnArea.getRandomPoint().x
     const y = scene.spawnArea.getRandomPoint().y
-    var newItem = new GameItem(x, y, randomType, randomItem, scene);
+    var newItem = new GameItem(x, y, itemType, randomItem, scene);
     newItem.text.setText(itemDescription);
 	},
 }
@@ -369,7 +386,7 @@ GM.Storage = {
 
 GM.Lang = {
   current: 'en',
-  options: ['en', 'pl'],
+  options: ['en'],
   parseQueryString: function(query) {
     var vars = query.split('&');
     var query_string = {};
@@ -447,46 +464,6 @@ GM.Lang = {
       'menu-username': 'Name:  ',
       'screen-story-howto': 'Click on the appropriate\nbin to dispose of the given item!\n\n\n\nif the item requires special\ndisposal - click on the item\nitself to reject it!'
     },
-    'pl': {
-      'FONT': 'Arial',
-      'settings': 'USTAWIENIA',
-      'sound-on': 'Dźwięk: WŁ.',
-      'sound-off': 'Dźwięk: WYŁ.',
-      'music-on': 'Muzyka: WŁ.',
-      'music-off': 'Muzyka: WYŁ.',
-      'keyboard-info': 'Wciśnij K by zobaczyć skróty klawiszowe',
-      'credits': 'AUTORZY',
-      'madeby': 'GM stworzone przez',
-      'team': 'ZESPÓŁ',
-      'coding': 'kodowanie',
-      'design': 'grafika',
-      'testing': 'testowanie',
-      'musicby': 'Muzyka autorstwa',
-      'key-title': 'SKRÓTY KLAWISZOWE',
-      'key-settings-title': 'Ustawienia',
-      'key-settings-onoff': 'S - pokaż/ukryj ustawienia',
-      'key-audio': 'A - włącz/wyłącz dźwięk',
-      'key-music': 'M - włącz/wyłącz muzykę',
-      'key-credits': 'C - pokaż/ukryj autorów',
-      'key-shortcuts': 'K - pokaż/ukryj skróty klawiszowe',
-      'key-menu': 'Menu główne',
-      'key-start': 'Enter - zacznij grę',
-      'key-continue': 'Enter - kontynuuj',
-      'key-gameplay': 'Rozgrywka',
-      'key-button': 'Enter - aktywuj przycisk CLICK ME',
-      'key-pause': 'P - włącz/wyłącz pauzę',
-      'key-pause-title': 'Ekran pauzy',
-      'key-back': 'B - powrót do menu głównego',
-      'key-return': 'P - powrót do gry',
-      'key-gameover': 'Ekran końca gry',
-      'key-try': 'T - spróbuj ponownie',
-      'gameplay-score': 'Wynik: ',
-      'gameplay-timeleft': 'Pozostały czas: ',
-      'gameplay-paused': 'PAUZA',
-      'gameplay-gameover': 'KONIEC GRY',
-      'menu-highscore': 'Rekord: ',
-      'screen-story-howto': 'Ekran fabuły / jak grać'
-    }
   }
 };
 
@@ -525,9 +502,10 @@ GM.leaderboardManager = {
   getScoreDialog: function (scene, score){
 		var scoreDialog = GM.leaderboardManager.createScoreDialog(scene, {
             x: GM.world.centerX,
-            y: GM.world.centerY,
+            y: GM.world.centerY + 50,
             title: 'Enter your name to\nsubmit this score',
             username: GM.userName,
+            width: 400,
         })
             .on('submit!', function (username) {
                 GM.leaderBoard.setUser({
@@ -554,14 +532,14 @@ GM.leaderboardManager = {
     var height = GetValue(config, 'height', undefined);
 
     var background = scene.rexUI.add.roundRectangle(0, 0, 10, 10, 10, COLOR_DARK);
-    var titleField = scene.add.text(0, 0, title);
+    var titleField = scene.add.text(0, 0, title, {fontSize: 20});
 
     var userNameField = scene.rexUI.add.label({
         orientation: 'x',
-        background: scene.rexUI.add.roundRectangle(0, 0, 10, 10, 10).setStrokeStyle(2, COLOR_LIGHT),
+        background: scene.rexUI.add.roundRectangle(0, 0, 10, 10, 10).setStrokeStyle(2, COLOR_SECONDARY),
         icon: scene.add.image(0, 0, 'user'),
-        text: scene.rexUI.add.BBCodeText(0, 0, username, { fixedWidth: 150, fixedHeight: 36, valign: 'center' }),
-        space: { top: 5, bottom: 5, left: 5, right: 5, icon: 10, }
+        text: scene.rexUI.add.BBCodeText(0, 0, username, { fixedWidth: 150, fontSize: 20, fixedHeight: 50, valign: 'center' }),
+        space: { top: 10, bottom: 10, left: 10, right: 10, icon: 20, }
     })
     .setInteractive()
     .on('pointerdown', function () {
@@ -576,9 +554,9 @@ GM.leaderboardManager = {
 
     var loginButton = scene.rexUI.add.label({
         orientation: 'x',
-        background: scene.rexUI.add.roundRectangle(0, 0, 10, 10, 10, COLOR_LIGHT),
-        text: scene.add.text(0, 0, 'Submit!'),
-        space: { top: 8, bottom: 8, left: 8, right: 8 }
+        background: scene.rexUI.add.roundRectangle(0, 0, 30, 30, 10, COLOR_SECONDARY),
+        text: scene.add.text(0, 0, 'Submit!', {fontSize: 20}),
+        space: { top: 20, bottom: 20, left: 20, right: 20 }
     })
     .setInteractive()
     .on('pointerdown', function () {
@@ -596,7 +574,7 @@ GM.leaderboardManager = {
       .add(titleField, 0, 'center', { top: 10, bottom: 10, left: 10, right: 10 }, false)
       .add(userNameField, 0, 'left', { bottom: 10, left: 10, right: 10 }, true)
       // .add(passwordField, 0, 'left', { bottom: 10, left: 10, right: 10 }, true)
-      .add(loginButton, 0, 'center', { bottom: 10, left: 10, right: 10 }, false)
+      .add(loginButton, 0, 'center', { top: 10, bottom: 10, left: 10, right: 10 }, false)
       .layout();
 
   return loginDialog;

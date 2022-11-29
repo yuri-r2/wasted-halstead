@@ -47,7 +47,7 @@ class Game extends Phaser.Scene {
 		this._runOnce = false;
 
 		var graphics = this.add.graphics({ lineStyle: { width: 4, color: 0x0000ff }, fillStyle: { color: 0xff0000 }});
-		this.spawnArea = new Phaser.Geom.Rectangle(60, 110, GM.world.width-120 , 150);
+		this.spawnArea = new Phaser.Geom.Rectangle(60, 140, GM.world.width-120 , 1);
 		graphics.strokeRectShape(this.spawnArea);
 
 		this.lights.enable().setAmbientColor(0xBBBBBB);
@@ -60,8 +60,10 @@ class Game extends Phaser.Scene {
 		this.items = []; //list of active waste items 
 		GM.GameManager.spawnRandomItem(this);
 		this.spawnTimer = this.time.addEvent({
-            delay: 900,
+            delay: 2000,
             callback: function(){
+				console.log("spawn");
+				this.spawnTimer.timeScale = 1 + (this._elapsedTime / 20);
                 GM.GameManager.spawnRandomItem(this);
             },
             callbackScope: this,
@@ -82,26 +84,52 @@ class Game extends Phaser.Scene {
 		this.matter.add.mouseSpring({ length: 1, stiffness: 0.6 });
 
 		this.matter.world.on('collisionstart', function (event) {
-			// console.log(event);
 			var pairs = event.pairs;
 
 			for (var i = 0; i < pairs.length; i++){
 				var bodyA = pairs[i].bodyA;
 				var bodyB = pairs[i].bodyB;
+
 				var binBody;
 				var itemBody;
+				var worldBody;
+				var isBinCollision = false;
+				var isWorldCollision = false; 
+
+				// Bin collision
 				if (bodyA.label == 'bin')
                 {
                     binBody = bodyA;
                     itemBody = bodyB;
+					isBinCollision = true;
                 }
                 else if (bodyB.label == 'bin')
                 {
                     binBody = bodyB;
                     itemBody = bodyA;
+					isBinCollision = true;
                 }
-				else { continue; }
-				GM.GameManager.binCollision(this.scene, binBody.gameObject, itemBody.gameObject);
+
+				// World border collision
+				if (bodyA.label == 'Rectangle Body')
+				{
+					worldBody = bodyA;
+					itemBody = bodyB;
+					isWorldCollision = true;
+				}
+				else if (bodyB.label == 'Rectangle Body'){
+					worldBody = bodyB;
+					itemBody = bodyA;
+					isWorldCollision = true;
+				}
+				
+				if (isBinCollision){
+					GM.GameManager.binCollision(this.scene, binBody.gameObject, itemBody.gameObject);
+				}
+
+				if (isWorldCollision){
+					GM.GameManager.removeItem(this.scene, itemBody.gameObject)
+				}
 			}
 	
 		});
@@ -118,8 +146,8 @@ class Game extends Phaser.Scene {
                 this._time--;
 				//INCREASE gravity with time
 				this._elapsedTime++;
-				if (this.matter.world.engine.world.gravity.y < 7){
-					this.matter.world.setGravity(0, this._elapsedTime * 0.02);
+				if (this.matter.world.engine.world.gravity.y < 6){
+					this.matter.world.setGravity(0, this._elapsedTime * 0.04);
 				}
 				// console.log(this.matter.world.engine.world.gravity.y)
                 this.textTime.setText(GM.text['gameplay-timeleft']+this._time);

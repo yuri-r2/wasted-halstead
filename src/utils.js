@@ -273,7 +273,7 @@ GM.GameManager = {
   removeItem: function(scene, itemToRemove){
     for (var i = 0; i < scene.items.length; i++){
       if (scene.items[i] == itemToRemove){
-        
+        console.log("removing" + itemToRemove);
         scene.items[i].text.destroy();
         scene.items[i].destroy();
         scene.items.splice(i, 1); 
@@ -288,6 +288,7 @@ GM.GameManager = {
     scene.items = [];
   },
   spawnRandomItem: function(scene){
+    if (scene.items.length >= 10) return; //MAX 10 items
 		var randomType = types[Math.floor(Math.random() * types.length)];
 		var randomItem = null;
 		var keys = null; 

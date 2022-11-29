@@ -1,7 +1,7 @@
 {
-    "name": "Enclave Phaser Template",
-    "short_name": "GM",
-    "description": "Mobile template for HTML5 games created using the Phaser game engine.",
+    "name": "Wasted in Halstead!",
+    "short_name": "Wasted in Halstead!",
+    "description": "Mobile browser game for Halstead 2022 zine. This game will teach you how to sort trash correctly in the city of Austin!",
     "icons": [
         {
             "src": "img/icons/icon-32.png",

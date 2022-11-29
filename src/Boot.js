@@ -5,7 +5,6 @@ class Boot extends Phaser.Scene {
     preload() {
         GM.Storage.initUnset('userID', uuidv4());
         this.load.image('background', 'img/background.png');
-        this.load.image('logo-enclave', 'img/logo-enclave.png');
         this.load.image('loading-background', 'img/loading-background.png');
         WebFont.load({ custom: { families: ['Pixel'], urls: ['fonts/Pixel.css'] } });
         this.load.plugin('rexfirebaseplugin', 'src/plugins/rexfirebaseplugin.min.js', true);

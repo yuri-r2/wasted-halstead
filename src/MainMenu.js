@@ -10,7 +10,6 @@ class MainMenu extends Phaser.Scene {
 		GM.Storage.initUnset('GM-highscore', 0);
 		var highscore = GM.Storage.get('GM-highscore');
 
-        this.waitingForSettings = false;
 
         var title = this.add.sprite(GM.world.centerX, GM.world.centerY-250, 'logo');
         title.setOrigin(0.5);
@@ -190,9 +189,6 @@ class MainMenu extends Phaser.Scene {
             GM.Sfx.init(this);
             // GM.Sfx.manage('music', 'init', this);
             // GM.Sfx.manage('sound', 'init', this);
-            if(this.waitingForSettings) {
-                this.clickSettings();
-            }
             if(this.waitingForStart) {
                 this.clickStart();
             }            

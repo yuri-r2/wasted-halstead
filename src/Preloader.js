@@ -4,8 +4,6 @@ class Preloader extends Phaser.Scene {
     }
     preload() {
 		this.add.sprite(0, 0, 'background').setOrigin(0, 0);
-        // var logoEnclave = this.add.sprite(GM.world.centerX, GM.world.centerY-100, 'logo-enclave');
-        // logoEnclave.setOrigin(0.5, 0.5);
 		var loadingBg = this.add.sprite(GM.world.centerX, GM.world.centerY+100, 'loading-background');
 		loadingBg.setOrigin(0.5, 0.5);
 
@@ -23,7 +21,6 @@ class Preloader extends Phaser.Scene {
 			],
 			'spritesheet': [
 				['button-start', 'img/button-start.png', {frameWidth:180,frameHeight:180}],
-				['button-settings', 'img/button-settings.png', {frameWidth:80,frameHeight:80}],
 				['loader', 'img/loader.png', {frameWidth:45,frameHeight:45}]
 			]
 		};

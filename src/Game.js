@@ -363,7 +363,7 @@ class Game extends Phaser.Scene {
 		}
 	}
 	onDragStart(body){
-		if(body.gameObject){
+		if(body.gameObject && body.gameObject instanceof GameItem){
 			this.scene.tweens.add({targets: body.gameObject, scale: 0.7, duration: 250, ease: 'Back'});
 			body.gameObject.text.setVisible(true);
 			body.gameObject.depth = 99; 
@@ -371,7 +371,7 @@ class Game extends Phaser.Scene {
 		  }
 	}
 	onDrag(body){
-		if(body.gameObject){
+		if(body.gameObject && body.gameObject instanceof GameItem){
 		  body.gameObject.text.x =  body.gameObject.x;
 		  body.gameObject.text.y =  body.gameObject.y - 120;
 		  GM.light.x = body.gameObject.x;
@@ -381,7 +381,7 @@ class Game extends Phaser.Scene {
 	onDragEnd(body){
 		GM.light.x = 0;
 		GM.light.y = 0;
-		if (body.gameObject){
+		if (body.gameObject && body.gameObject instanceof GameItem){
 		  this.scene.tweens.add({targets: body.gameObject, scale: 0.45, duration: 250, ease: 'Back'});
 		  body.gameObject.text.setVisible(false);
 		  // body.gameObject._scaleX = 0.45;

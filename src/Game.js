@@ -54,10 +54,10 @@ class Game extends Phaser.Scene {
 
 		
 		//Bounds are slightly offset to prevent accidental collisions with borders
-		this.matter.world.setBounds(-60, -60, GM.world.width+120, GM.world.height+120, 4096);
+		this.matter.world.setBounds(-40, -40, GM.world.width+80, GM.world.height+80, 4096);
 
 
-		this.matter.add.mouseSpring({ length: 1, stiffness: 0.6 });
+		this.matter.add.mouseSpring({ length: 1, stiffness: 0.9, angularStiffness: 0.9 });
 
 		
 		this.binCompost = new GameBin('compost', GM.world.centerX - 210, GM.world.centerY + 320, this);

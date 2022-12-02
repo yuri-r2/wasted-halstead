@@ -32,7 +32,7 @@ class Story extends Phaser.Scene {
             fixedWidth: 500,
             fixedHeight: 150,
         })
-		textBox.start(GAME_STORY, 50);
+		textBox.start(GAME_STORY, 45);
 		
 
 		

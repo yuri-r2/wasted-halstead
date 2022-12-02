@@ -20,21 +20,29 @@ class Game extends Phaser.Scene {
 		this._gamePaused = false;
 		this._runOnce = false;
 
-		var graphics = this.add.graphics({ lineStyle: { width: 4, color: 0x0000ff }, fillStyle: { color: 0xff0000 }});
-		this.spawnArea = new Phaser.Geom.Rectangle(60, 140, GM.world.width-120 , 1);
-		graphics.strokeRectShape(this.spawnArea);
+		class SpawnSpot {
+			constructor(x) {
+			  this.used = false;
+			  this.item = null;
+			  this.x = x;
+			}
+		}
+		this.spawnSpots = [];
+		for (var i = 60; i <= 580; i += 52){
+			this.spawnSpots.push(new SpawnSpot(i));
+		}
 
 		this.lights.enable().setAmbientColor(0xBBBBBB);
 		GM.light = this.lights.addLight(0, 0, 300).setColor(0xffffff).setIntensity(1);
 		
 		this.items = []; //list of active waste items 
-		GM.GameManager.spawnRandomItem(this);
+		this.spawnRandomItem();
 		this.spawnTimer = this.time.addEvent({
             delay: 2000,
             callback: function(){
 				console.log("spawn");
 				this.spawnTimer.timeScale = 1 + (this._elapsedTime / 20);
-                GM.GameManager.spawnRandomItem(this);
+                this.spawnRandomItem();
             },
             callbackScope: this,
             loop: true
@@ -160,6 +168,44 @@ class Game extends Phaser.Scene {
 			}
 		}
 	}
+
+	spawnRandomItem() {
+		var availableSpots = this.spawnSpots.filter(function (spot) { return spot.used === false });
+		var spawnSpot = availableSpots[ ~~(Math.random() * availableSpots.length) ]
+		const keys = Object.keys(itemDescriptions)
+		const randomItem = keys[Math.floor(Math.random() * keys.length)];
+		const itemDescription = itemDescriptions[randomItem];
+		const itemType = randomItem.split('-')[0];
+		const x = spawnSpot.x;
+		const y = 140;
+		var newItem = new GameItem(x, y, itemType, randomItem, this);
+		newItem.text.setText(itemDescription);
+		spawnSpot.item = newItem;
+		spawnSpot.used = true;
+		return;
+	}
+
+	removeItem(itemToRemove) { 
+		for (var spawnSpot of this.spawnSpots){
+			if (spawnSpot.item === itemToRemove){
+				spawnSpot.item.text.destroy();
+				spawnSpot.item.destroy();
+				spawnSpot.item = null;
+				spawnSpot.used = false;
+			}
+		}
+	}
+
+	clearItems () {
+		for (var spawnSpot of this.spawnSpots){
+		  if (spawnSpot.item){
+			  spawnSpot.item.text.destroy();
+			  spawnSpot.item.destroy();
+			  spawnSpot.item = null;
+		  }
+		  spawnSpot.used = false;
+		}
+	}
     
     managePause() {
         this._gamePaused =! this._gamePaused;
@@ -208,7 +254,7 @@ class Game extends Phaser.Scene {
 	}
 	stateGameover() {
 		this.matter.world.pause();
-		GM.GameManager.clearItems(this);
+		this.clearItems();
 		GM.leaderboardManager.getScoreDialog(this, this._score);
 		this.currentTimer.paused =! this.currentTimer.paused;
 		this.spawnTimer.paused =! this.spawnTimer.paused;
@@ -285,7 +331,7 @@ class Game extends Phaser.Scene {
         GM.fadeOutScene('Game', this);
 	}
 	stateBack() {
-		GM.GameManager.clearItems(this);
+		this.clearItems();
 		GM.Sfx.play('click', this);
 		GM.fadeOutScene('MainMenu', this);
 	}

@@ -272,7 +272,7 @@ GM.GameManager = {
       GM.Sfx.play('trash', scene);
       GM.GameManager.addPoints(scene);
       //GM.GameManager.updateItem(scene);
-      GM.GameManager.removeItem(scene, itemObject);
+      scene.removeItem(itemObject);
       //GM.GameManager.spawnRandomItem(scene);
     }
     else {
@@ -280,14 +280,14 @@ GM.GameManager = {
     }
   },
   endGame: function (scene){
-    GM.GameManager.clearItems(scene);
+    scene.clearItems();
     scene._runOnce = false;
     scene.stateStatus = 'gameover';
     GM.Sfx.play('gameover', scene);
   },
   borderCollision: function(scene, itemObject){
     if (!itemObject) return; //prevent double collision for already removed item
-    GM.GameManager.removeItem(scene, itemObject);
+    scene.removeItem(itemObject);
     const text = "Discarded " + itemDescriptions[itemObject.texture.key];
     var itemDiscardedText = scene.add.text(GM.world.centerX, 100, text, { font: '25px '+GM.text['FONT'], fill: '#E4943A', stroke: '#000', strokeThickness: 4 });
 		itemDiscardedText.setOrigin(0.5, 0.5);
@@ -321,18 +321,6 @@ GM.GameManager = {
     }
     scene.items = [];
   },
-  spawnRandomItem: function(scene){
-    if (scene.items.length >= 10) return; //MAX 10 items
-	
-    const keys = Object.keys(itemDescriptions)
-		const randomItem = keys[Math.floor(Math.random() * keys.length)];
-    const itemDescription = itemDescriptions[randomItem];
-    const itemType = randomItem.split('-')[0];
-    const x = scene.spawnArea.getRandomPoint().x
-    const y = scene.spawnArea.getRandomPoint().y
-    var newItem = new GameItem(x, y, itemType, randomItem, scene);
-    newItem.text.setText(itemDescription);
-	},
 }
 
 GM.Storage = {

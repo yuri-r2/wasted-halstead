@@ -302,6 +302,7 @@ GM.GameManager = {
 		pointsAdded.setOrigin(0.5, 0.5);
     scene.tweens.add({targets: pointsAdded, alpha: 0, y: randY-50, duration: 1000, ease: 'Linear'});
     scene.cameras.main.shake(100, 0.01, true);
+    scene.textScore.setText(GM.text['gameplay-score']+scene._score);
   },
   removeItem: function(scene, itemToRemove){
     for (var i = 0; i < scene.items.length; i++){

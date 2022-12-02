@@ -470,16 +470,16 @@ GM.Lang = {
 GM.leaderboardManager = {
  initLeaderboard: function(scene){
   const firebaseConfig = {
-      apiKey: "AIzaSyAcKoJiaLeGcwvmJBZ6qiI2H0O0ZyKNTU4",
-      authDomain: "phaser-waste-leaderboard.firebaseapp.com",
-      projectId: "phaser-waste-leaderboard",
-      storageBucket: "phaser-waste-leaderboard.appspot.com",
-      messagingSenderId: "417569878265",
-      appId: "1:417569878265:web:3dc71c82f6d7273a627228"
+      apiKey: "AIzaSyAxIVrH73Babam-4GlJSkDYqoRu3V3j4CY",
+      authDomain: "wasted-in-halstead.firebaseapp.com",
+      projectId: "wasted-in-halstead",
+      storageBucket: "wasted-in-halstead.appspot.com",
+      messagingSenderId: "902570193615",
+      appId: "1:902570193615:web:d93323a8072492c451bdba"
     };
     var rexFire = scene.plugins.get('rexfirebaseplugin').initializeApp(firebaseConfig);
     var leaderBoard = rexFire.add.leaderBoard({
-      root: 'leaderboard-test',
+      root: 'leaderboard-main',
       timeFilters: false,
       boardID: 'mainBoardID',
       tag: 'mainTag',

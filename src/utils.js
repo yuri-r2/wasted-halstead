@@ -35,20 +35,22 @@ GM.Sfx = {
     game.sound.pauseOnBlur = false;
     var BabyOneMoreTime = game.sound.add('BabyOneMoreTime').setVolume(0.3);
     var BadRomance = game.sound.add('BadRomance').setVolume(0.3);
-    var HungUp = game.sound.add('HungUp').setVolume(0.3);
+    var TikTok = game.sound.add('TikTok').setVolume(0.3);
     var CallMeMaybe = game.sound.add('CallMeMaybe').setVolume(0.3);
-    GM.Sfx.songs = [BabyOneMoreTime, BadRomance, CallMeMaybe, HungUp];
+    GM.Sfx.songs = [BabyOneMoreTime, BadRomance, CallMeMaybe, TikTok];
     GM.Sfx.music = Phaser.Math.RND.pick(GM.Sfx.songs);
     GM.Sfx.sounds = [];
     GM.Sfx.sounds['click'] = game.sound.add('sound-click');
-    GM.Sfx.sounds['gameover'] = game.sound.add('sound-gameover');
+    GM.Sfx.sounds['gameover'] = game.sound.add('sound-gameover').setVolume(0.6);
     GM.Sfx.sounds['trash'] = game.sound.add('sound-trash');
   },
   playMusic: function(scene) {
-    console.log(scene);
-    console.log("pointerdown");
       if (!GM.Sfx.music.isPlaying){
-        GM.Sfx.music = Phaser.Math.RND.pick(GM.Sfx.songs);
+        var newSong = Phaser.Math.RND.pick(GM.Sfx.songs);
+        while (newSong === GM.Sfx.music){
+          newSong = Phaser.Math.RND.pick(GM.Sfx.songs);
+        }
+        GM.Sfx.music = newSong;
         scene.manager.game.sound.unlock();
         if (!scene.manager.game.sound.locked) {
           GM.Sfx.music.play();
@@ -313,7 +315,6 @@ GM.GameManager = {
   removeItem: function(scene, itemToRemove){
     for (var i = 0; i < scene.items.length; i++){
       if (scene.items[i] == itemToRemove){
-        console.log(itemToRemove);
         scene.items[i].text.destroy();
         scene.items[i].destroy();
         scene.items.splice(i, 1); 

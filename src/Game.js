@@ -41,7 +41,6 @@ class Game extends Phaser.Scene {
 		this.spawnTimer = this.time.addEvent({
             delay: 2000,
             callback: function(){
-				console.log("spawn");
 				this.spawnTimer.timeScale = 1 + (this._elapsedTime / 20);
                 this.spawnRandomItem();
             },
@@ -75,7 +74,6 @@ class Game extends Phaser.Scene {
 				if (this.matter.world.engine.world.gravity.y < 6){
 					this.matter.world.setGravity(0, this._elapsedTime * 0.04);
 				}
-				// console.log(this.matter.world.engine.world.gravity.y)
                 //this.textTime.setText(GM.text['gameplay-timeleft']+this._time);
                 // if(!this._time) {
                 //     this._runOnce = false;
@@ -173,6 +171,7 @@ class Game extends Phaser.Scene {
 	spawnRandomItem() {
 		var availableSpots = this.spawnSpots.filter(function (spot) { return spot.used === false });
 		var spawnSpot = availableSpots[ ~~(Math.random() * availableSpots.length) ]
+		if (!spawnSpot) return;
 		const keys = Object.keys(itemDescriptions)
 		const randomItem = keys[Math.floor(Math.random() * keys.length)];
 		const itemDescription = itemDescriptions[randomItem];

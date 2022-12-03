@@ -93,7 +93,6 @@ class MainMenu extends Phaser.Scene {
         }
     }
     startPreloadInTheBackground() {
-        // console.log('[GM] Starting background loading...');
         this.load.image('img/compost');
         this.load.image('img/trash');
         this.load.image('img/recycle');
@@ -166,7 +165,7 @@ class MainMenu extends Phaser.Scene {
                 ['sound-trash', ['sfx/TrashClose.mp3']],
                 ['BabyOneMoreTime', ['sfx/BabyOneMoreTime.mp3']],
                 ['CallMeMaybe', ['sfx/CallMeMaybe.mp3']],
-                ['HungUp', ['sfx/HungUp.mp3']],
+                ['TikTok', ['sfx/TikTok.mp3']],
                 ['BadRomance', ['sfx/BadRomance.mp3']],
             ]
         };            
@@ -177,7 +176,6 @@ class MainMenu extends Phaser.Scene {
             }, this);
         };
         this.load.on('complete', function(){
-            // console.log('[GM] All files loaded in the background.');
             this.bgFilesLoaded = true;
             GM.Sfx.init(this);
             this.input.on('pointerdown', GM.Sfx.playMusic);

@@ -33,25 +33,32 @@ var GM = {};
 GM.Sfx = {
   init: function (game) {
     game.sound.pauseOnBlur = false;
-    GM.Sfx.music = game.sound.add('music-theme');
-    GM.Sfx.music.volume = 0.3;
+    var BabyOneMoreTime = game.sound.add('BabyOneMoreTime').setVolume(0.3);
+    var BadRomance = game.sound.add('BadRomance').setVolume(0.3);
+    var HungUp = game.sound.add('HungUp').setVolume(0.3);
+    var CallMeMaybe = game.sound.add('CallMeMaybe').setVolume(0.3);
+    GM.Sfx.songs = [BabyOneMoreTime, BadRomance, CallMeMaybe, HungUp];
+    GM.Sfx.music = Phaser.Math.RND.pick(GM.Sfx.songs);
     GM.Sfx.sounds = [];
     GM.Sfx.sounds['click'] = game.sound.add('sound-click');
     GM.Sfx.sounds['gameover'] = game.sound.add('sound-gameover');
     GM.Sfx.sounds['trash'] = game.sound.add('sound-trash');
-    game.input.on('pointerdown', function () {
+  },
+  playMusic: function(scene) {
+    console.log(scene);
+    console.log("pointerdown");
       if (!GM.Sfx.music.isPlaying){
-        game.sound.unlock();
-        if (!game.sound.locked) {
-          GM.Sfx.music.play({loop:true});
+        GM.Sfx.music = Phaser.Math.RND.pick(GM.Sfx.songs);
+        scene.manager.game.sound.unlock();
+        if (!scene.manager.game.sound.locked) {
+          GM.Sfx.music.play();
         }
         else{  // IF Not wait on unlock event 
-          game.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
-            GM.Sfx.music.play({loop:true});
+          scene.manager.game.sound.once(Phaser.Sound.Events.UNLOCKED, () => {
+            GM.Sfx.music.play();
           })
         }
       }
-    }, game);
   },
   play: function(audio, game) {
     if(GM.Sfx.sounds && GM.Sfx.sounds[audio]) {
@@ -64,7 +71,6 @@ GM.Sfx = {
           GM.Sfx.sounds[audio].play();
         })
       }
-      
     }
   }
 }

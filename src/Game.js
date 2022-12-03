@@ -12,6 +12,7 @@ class Game extends Phaser.Scene {
         this.load.image('user', 'img/person.png');
 	}
     create() {
+		this.input.on('pointerdown', GM.Sfx.playMusic);
 		
         this.add.sprite(0, 0, 'background').setOrigin(0,0).setPipeline('Light2D');
         this.stateStatus = null;

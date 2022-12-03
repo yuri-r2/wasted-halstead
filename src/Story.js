@@ -14,6 +14,7 @@ class Story extends Phaser.Scene {
         this.load.image('nextPage', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png');
 	}
     create() {
+        this.input.on('pointerdown', GM.Sfx.playMusic);
 		this.storyBackground = this.add.sprite(0, 0, 'wastedStory').setOrigin(0,0);
 
 		var GAME_STORY = [

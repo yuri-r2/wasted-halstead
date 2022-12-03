@@ -164,7 +164,10 @@ class MainMenu extends Phaser.Scene {
                 ['sound-click', ['sfx/button-click-long.mp3']],
                 ['sound-gameover', ['sfx/GameOver.mp3']],
                 ['sound-trash', ['sfx/TrashClose.mp3']],
-                ['music-theme', ['sfx/TexasFight.mp3']]
+                ['BabyOneMoreTime', ['sfx/BabyOneMoreTime.mp3']],
+                ['CallMeMaybe', ['sfx/CallMeMaybe.mp3']],
+                ['HungUp', ['sfx/HungUp.mp3']],
+                ['BadRomance', ['sfx/BadRomance.mp3']],
             ]
         };            
         for(var method in resources) {
@@ -177,6 +180,7 @@ class MainMenu extends Phaser.Scene {
             // console.log('[GM] All files loaded in the background.');
             this.bgFilesLoaded = true;
             GM.Sfx.init(this);
+            this.input.on('pointerdown', GM.Sfx.playMusic);
             // GM.Sfx.manage('music', 'init', this);
             // GM.Sfx.manage('sound', 'init', this);
             if(this.waitingForStart) {

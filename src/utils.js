@@ -38,7 +38,9 @@ GM.Sfx = {
     var TikTok = game.sound.add('TikTok').setVolume(0.3);
     var CallMeMaybe = game.sound.add('CallMeMaybe').setVolume(0.3);
     GM.Sfx.songs = [BabyOneMoreTime, BadRomance, CallMeMaybe, TikTok];
-    GM.Sfx.music = Phaser.Math.RND.pick(GM.Sfx.songs);
+    shuffleArray(GM.Sfx.songs)
+    GM.Sfx.currentSong = 0;
+    GM.Sfx.music = GM.Sfx.songs[0]
     GM.Sfx.sounds = [];
     GM.Sfx.sounds['click'] = game.sound.add('sound-click');
     GM.Sfx.sounds['gameover'] = game.sound.add('sound-gameover').setVolume(0.6);
@@ -46,11 +48,11 @@ GM.Sfx = {
   },
   playMusic: function(scene) {
       if (!GM.Sfx.music.isPlaying){
-        var newSong = Phaser.Math.RND.pick(GM.Sfx.songs);
-        while (newSong === GM.Sfx.music){
-          newSong = Phaser.Math.RND.pick(GM.Sfx.songs);
+        GM.Sfx.currentSong += 1;
+        if (GM.Sfx.currentSong == GM.Sfx.songs.length-1){
+          GM.Sfx.currentSong = 0;
         }
-        GM.Sfx.music = newSong;
+        GM.Sfx.music = GM.Sfx.songs[GM.Sfx.currentSong];
         scene.manager.game.sound.unlock();
         if (!scene.manager.game.sound.locked) {
           GM.Sfx.music.play();
@@ -574,6 +576,13 @@ GM.leaderboardManager = {
       .layout();
 
   return loginDialog;
+  }
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
   }
 }
 

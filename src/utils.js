@@ -497,7 +497,7 @@ GM.leaderboardManager = {
             var fontScore = { font: '30px '+GM.text['FONT'], fill: rainbowcolors[index], stroke: '#000', strokeThickness: 3 };
             index = index + 1
             var offsetY = index * 30;
-            var textScore = scene.add.text(60, GM.world.centerY-50 + offsetY, (index + '. ' + el.userName + ': ' + el.score), fontScore);
+            var textScore = scene.add.text(60, GM.world.centerY-64 + offsetY, (index + '. ' + el.userName + ': ' + el.score), fontScore);
         });
     })
     .catch(function(error) {console.log(error)})

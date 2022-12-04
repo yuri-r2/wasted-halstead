@@ -318,10 +318,10 @@ class Game extends Phaser.Scene {
 		this.screenGameoverRestart.setOrigin(1,1);
 		this.screenGameoverScore = this.add.text(GM.world.centerX, 350, GM.text['gameplay-score']+this._score, fontScoreWhite);
 		this.screenGameoverScore.setOrigin(0.5,0.5);
-		var fontGameoverItem =  { font: '32px '+GM.text['FONT'], fill: '#FF0800', align: 'center'};
+		var fontGameoverItem =  { font: '26px '+GM.text['FONT'], fill: '#FF0800', align: 'center'};
 		var fontExplanation =  { font: '20px '+GM.text['FONT'], fill: '#FFFFFF', wordWrap: { width: 600 }, align: 'center'};
 		this.screenGameoverItem = this.add.text(GM.world.centerX, 200, "", fontGameoverItem).setOrigin(0.5,0.5);;
-		this.screenGameoverExplanation = this.add.text(30, 240, "", fontExplanation);
+		this.screenGameoverExplanation = this.add.text(30, 220, "", fontExplanation);
 		this.screenGameoverGroup.add(this.screenGameoverExplanation);
 		this.screenGameoverGroup.add(this.screenGameoverItem);
 		this.screenGameoverGroup.add(this.screenGameoverBg);

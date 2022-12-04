@@ -174,7 +174,7 @@ class Game extends Phaser.Scene {
 		if (!spawnSpot) return;
 		const keys = Object.keys(itemDescriptions)
 		const randomItem = keys[Math.floor(Math.random() * keys.length)];
-		const itemDescription = itemDescriptions[randomItem];
+		const itemDescription = itemDescriptions[randomItem][0];
 		const itemType = randomItem.split('-')[0];
 		const x = spawnSpot.x;
 		const y = 140;
@@ -316,8 +316,14 @@ class Game extends Phaser.Scene {
 		this.screenGameoverBack.setOrigin(0,1);
 		this.screenGameoverRestart = new Button(GM.world.width-100, GM.world.height-100, 'button-restart', this.stateRestart, this);
 		this.screenGameoverRestart.setOrigin(1,1);
-		this.screenGameoverScore = this.add.text(GM.world.centerX, 300, GM.text['gameplay-score']+this._score, fontScoreWhite);
+		this.screenGameoverScore = this.add.text(GM.world.centerX, 350, GM.text['gameplay-score']+this._score, fontScoreWhite);
 		this.screenGameoverScore.setOrigin(0.5,0.5);
+		var fontGameoverItem =  { font: '32px '+GM.text['FONT'], fill: '#FF0800', align: 'center'};
+		var fontExplanation =  { font: '20px '+GM.text['FONT'], fill: '#FFFFFF', wordWrap: { width: 600 }, align: 'center'};
+		this.screenGameoverItem = this.add.text(GM.world.centerX, 200, "", fontGameoverItem).setOrigin(0.5,0.5);;
+		this.screenGameoverExplanation = this.add.text(30, 240, "", fontExplanation);
+		this.screenGameoverGroup.add(this.screenGameoverExplanation);
+		this.screenGameoverGroup.add(this.screenGameoverItem);
 		this.screenGameoverGroup.add(this.screenGameoverBg);
 		this.screenGameoverGroup.add(this.screenGameoverText);
 		this.screenGameoverGroup.add(this.screenGameoverBack);

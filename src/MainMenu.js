@@ -11,7 +11,7 @@ class MainMenu extends Phaser.Scene {
 		var highscore = GM.Storage.get('GM-highscore');
 
 
-        var title = this.add.sprite(GM.world.centerX, GM.world.centerY-250, 'logo');
+        var title = this.add.sprite(GM.world.centerX, GM.world.centerY-235, 'logo');
         title.setOrigin(0.5);
 
         this.tweens.add({targets: title, angle: title.angle-2, duration: 1000, ease: 'Sine.easeInOut' });

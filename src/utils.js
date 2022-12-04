@@ -7,26 +7,26 @@ const COLOR_DARK = 0x1F0E1C;
 
 const types = ["trash", "recycle", "compost"];
 const itemDescriptions ={ 
-'trash-bluebell': "Empty can of Blue Bell icecream",
-'trash-bubblewrap': "Bubble wrap",
-'trash-chewinggum': "Well-chewed chewing gum",
-'trash-ketchup': "Ketchup packet",
-'trash-milkcarton': "Empty carton of milk",
-'trash-plasticbag': "Plastic grocery bag",
+'trash-bluebell': ["Empty can of Blue Bell icecream", "Carton packets often contain plastics and/or oils. It is best to dispose them in the trash."],
+'trash-bubblewrap': ["Bubble wrap", "Soft plastic films can get tangled in the sorting machines. It is better to throw them out in trash rather than in recycling bin"],
+'trash-chewinggum': ["Well-chewed chewing gum", "Chewing gum is not biodegradable and sticks to surfaces easily therefore it is better to just trash it"],
+'trash-ketchup': ["Ketchup packet", "Condiment packets cannot be easily recycled and it is better to throw them in trash"],
+'trash-milkcarton': ["Empty carton of milk", "Carton packets often contain plastics and/or oils. It is best to dispose them in the trash."],
+'trash-plasticbag': ["Plastic grocery bag",  "Soft plastic films can get tangled in the sorting machines. It is better to throw them out in trash rather than in recycling bin"],
 
-'recycle-spaghettios': "Cleaned out can of SpaghettiOs",
-'recycle-aluminium': "Aluminium foil",
-'recycle-cakecontainer': "Cleaned out cake container",
-'recycle-cardboard': "Broken down cardboard box",
-'recycle-cheerios': "Empty box of Cheerios",
-'recycle-dasani': "Empty Dasani bottle",
+'recycle-spaghettios': ["Cleaned out can of SpaghettiOs", "Metal cans should go in recycling bin. Just make sure it is cleaned out"],
+'recycle-aluminium': ["Aluminium foil", "Aluminium foil should be recycled. Just make sure it is clean"], 
+'recycle-cakecontainer': ["Cleaned out cake container", "Hard plastics should go in a recycling bin. Just make sure that they are clean"],
+'recycle-cardboard': ["Broken down cardboard box", "Cardboard boxes should be recycled. Make sure to break them down first"],
+'recycle-cheerios': ["Empty box of Cheerios", "Cardboard boxes should be recycled. Make sure to break them down first"],
+'recycle-dasani': ["Empty Dasani bottle", "Hard plastics should go in a recycling bin. Just make sure that they are clean and without liquids"],
 
-'compost-clamshell': "Clamshell made of sugar cane fibers",
-'compost-coffeegrounds': "Used coffee grounds",
-'compost-dylans': "Dylan's pizza",
-'compost-eggshells': "Egg shells",
-'compost-papertowel': "Paper towels",
-'compost-parchment': "Parchment paper"
+'compost-clamshell': ["Clamshell made of sugar cane fibers", "Food containers made from biodegradable materials should be composted"],
+'compost-coffeegrounds': ["Used coffee grounds", "Coffee grounds and paper are biodegradable and should be composted"],
+'compost-dylans': ["Dylan's pizza", "Food is biodegradable and should be composted"],
+'compost-eggshells': ["Egg shells", "Egg shells are biodegradable and should be composted"],
+'compost-papertowel': ["Paper towels", "Paper towels are biodegradable and should be composted"],
+'compost-parchment': ["Parchment paper", "Parchment paper is biodegradable and should be composted"],
 }
 
 var GM = {};
@@ -286,6 +286,8 @@ GM.GameManager = {
       //GM.GameManager.spawnRandomItem(scene);
     }
     else {
+      scene.screenGameoverItem.setText(itemDescriptions[itemObject.texture.key][0]);
+      scene.screenGameoverExplanation.setText(itemDescriptions[itemObject.texture.key][1]);
       GM.GameManager.endGame(scene);
     }
   },
@@ -298,7 +300,7 @@ GM.GameManager = {
   borderCollision: function(scene, itemObject){
     if (!itemObject) return; //prevent double collision for already removed item
     scene.removeItem(itemObject);
-    const text = "Discarded " + itemDescriptions[itemObject.texture.key];
+    const text = "Discarded " + itemDescriptions[itemObject.texture.key][0];
     var itemDiscardedText = scene.add.text(GM.world.centerX, 100, text, { font: '25px '+GM.text['FONT'], fill: '#E4943A', stroke: '#000', strokeThickness: 4 });
 		itemDiscardedText.setOrigin(0.5, 0.5);
     scene.tweens.add({targets: itemDiscardedText, alpha: 0, y: 50, duration: 4000, ease: 'Linear'});
@@ -486,13 +488,16 @@ GM.leaderboardManager = {
     GM.leaderBoard = leaderBoard;
   },
   displayTopScores: function(scene) {
+    const rainbowcolors = ["#ff0000", '#ff7f00', '#ffff00', '#7fff00', '#00ff00', '#00ff7f', '#00ffff', '#007fff', '#0000ff', '#7f00ff']
+    var fontLeaderboardTitle =  { font: '42px '+GM.text['FONT'], fill: '#000', stroke: '#FFFFFF', strokeThickness: 5 };
+    var textLeaderBoardTitle = scene.add.text(GM.world.centerX, 420, "LEADERBOARD", fontLeaderboardTitle).setOrigin(0.5,0.5);
     GM.leaderBoard.loadFirstPage()
     .then(function(scores) {
         scores.forEach((el, index) => {
+            var fontScore = { font: '30px '+GM.text['FONT'], fill: rainbowcolors[index], stroke: '#000', strokeThickness: 3 };
             index = index + 1
             var offsetY = index * 30;
-            var fontScore = { font: '30px '+GM.text['FONT'], fill: '#D6DE49', stroke: '#000', strokeThickness: 3 };
-            var textScore = scene.add.text(30, GM.world.centerY-150 + offsetY, (index + '. ' + el.userName + ': ' + el.score), fontScore);
+            var textScore = scene.add.text(60, GM.world.centerY-50 + offsetY, (index + '. ' + el.userName + ': ' + el.score), fontScore);
         });
     })
     .catch(function(error) {console.log(error)})

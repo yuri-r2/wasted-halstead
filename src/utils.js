@@ -49,7 +49,8 @@ GM.Sfx = {
   playMusic: function(scene) {
       if (!GM.Sfx.music.isPlaying){
         GM.Sfx.currentSong += 1;
-        if (GM.Sfx.currentSong == GM.Sfx.songs.length-1){
+        if (GM.Sfx.currentSong === GM.Sfx.songs.length-1){
+          //console.log("songs loop restart");
           GM.Sfx.currentSong = 0;
         }
         GM.Sfx.music = GM.Sfx.songs[GM.Sfx.currentSong];
